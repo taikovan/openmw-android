@@ -1,0 +1,21 @@
+diff --git a/src/gl/shader_hacks.c b/src/gl/shader_hacks.c
+index a3b5aab..23d70be 100755
+--- a/src/gl/shader_hacks.c
++++ b/src/gl/shader_hacks.c
+@@ -358,6 +358,7 @@ static char* ShaderHacks_2(char* shader, char* Tmp, int* tmpsize)
+ 
+ char* ShaderHacks(char* shader)
+ {
++/*
+     char* Tmp = shader;
+     int tmpsize = strlen(Tmp)+10;
+     // specific hacks
+@@ -376,4 +377,6 @@ char* ShaderHacks(char* shader)
+         }
+     }
+     return Tmp;
+-}
+\ No newline at end of file
++*/
++    return shader;
++}

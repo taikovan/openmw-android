@@ -416,9 +416,7 @@ class MainActivity : AppCompatActivity() {
 
                 file.Writer.write(Constants.OPENMW_CFG, "encoding", prefs!!.getString("pref_encoding", GameInstaller.DEFAULT_CHARSET_PREF)!!)
 
-                file.Writer.write(Constants.SETTINGS_DEFAULT_CFG, "scaling factor", "%.2f".format(Locale.ROOT, scaling))
-
-                file.Writer.write(Constants.SETTINGS_DEFAULT_CFG, "allow capsule shape", prefs!!.getString("pref_allowCapsuleShape", "true")!!)
+                file.Writer.write(Constants.USER_CONFIG + "/settings.cfg", "scaling factor", "%.2f".format(Locale.ROOT, scaling))
 
                 runOnUiThread {
                     obtainFixedScreenResolution()

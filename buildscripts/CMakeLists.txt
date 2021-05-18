@@ -41,7 +41,7 @@ set(GL4ES_VERSION v1.1.4)
 set(GL4ES_HASH SHA256=b565e717c7d192e936bda25f3cb90ad8db398af56414ec08294b6716574c1a6d)
 
 # https://github.com/openscenegraph/OpenSceneGraph/releases
-set(OSG_VERSION 3.6.5)
+set(OSG_VERSION 76e061739610bc9a3420a59e7c9395e742ce2f97)
 set(OSG_HASH SHA256=aea196550f02974d6d09291c5d83b51ca6a03b3767e234a8c0e21322927d1e12)
 
 # https://github.com/lz4/lz4/releases
@@ -49,8 +49,8 @@ set(LZ4_VERSION 1.9.3)
 set(LZ4_HASH SHA256=030644df4611007ff7dc962d981f390361e6c97a34e5cbc393ddfbe019ffe2c1)
 
 # https://github.com/OpenMW/openmw/commits/master
-set(OPENMW_VERSION e65b285f062089ae113331531980c426c149d82c)
-set(OPENMW_HASH SHA256=a5f34fca02fb62c2475df3fd4c4e34d91458625630217c38a1e697d9570945db)
+set(OPENMW_VERSION 07c00bf49de19c35d4d7bf3c4915aa344c5cdccd)
+set(OPENMW_HASH SHA256=44d044ad0a5546216fe611fe92c37065bb07e2efeeeaac4f049dae03df313186)
 
 # End of configurable options
 
@@ -301,6 +301,7 @@ ExternalProject_Add(bullet
 	-DBUILD_UNIT_TESTS=OFF
 	-DBUILD_EXTRAS=OFF
 	-DUSE_DOUBLE_PRECISION=ON
+	-DBULLET2_MULTITHREADING=ON
 
 	BUILD_COMMAND ${wrapper_command} $(MAKE)
 
@@ -315,6 +316,7 @@ ExternalProject_Add(gl4es
 
 	PATCH_COMMAND patch -d <SOURCE_DIR> -p1 -t -N < ${CMAKE_SOURCE_DIR}/patches/gl4es/shared-library.patch
 	COMMAND patch -d <SOURCE_DIR> -p1 -t -N < ${CMAKE_SOURCE_DIR}/patches/gl4es/gamma.patch
+	COMMAND patch -d <SOURCE_DIR> -p1 -t -N < ${CMAKE_SOURCE_DIR}/patches/gl4es/disable-shader-hacks.patch
 	COMMAND patch -d <SOURCE_DIR> -p1 -t -N < ${CMAKE_SOURCE_DIR}/patches/gl4es/keyword-usage.patch
 
 	CONFIGURE_COMMAND ""
@@ -355,6 +357,7 @@ ExternalProject_Add(mygui
 ExternalProject_Add(lz4
 	URL https://github.com/lz4/lz4/archive/v${LZ4_VERSION}.tar.gz
 	https://github.com/xyzz/openmw-deps/releases/download/v0/v${LZ4_VERSION}.tar.gz
+
 	URL_HASH ${LZ4_HASH}
 	DOWNLOAD_DIR ${download_dir}
 
@@ -406,15 +409,16 @@ set(OSG_PATCH
 	patch -d <SOURCE_DIR> -p1 -t -N < ${CMAKE_SOURCE_DIR}/patches/osg/0001-Replace-Atomic-impl-with-std-atomic.patch &&
 	patch -d <SOURCE_DIR> -p1 -t -N < ${CMAKE_SOURCE_DIR}/patches/osg/0002-BufferObject-make-numClients-atomic.patch &&
 	patch -d <SOURCE_DIR> -p1 -t -N < ${CMAKE_SOURCE_DIR}/patches/osg/0004-IncrementalCompileOperation-wrap-some-stuff-in-atomi.patch &&
+	patch -d <SOURCE_DIR> -p1 -t -N < ${CMAKE_SOURCE_DIR}/patches/osg/remove-zlib-dependency.patch &&
 	patch -d <SOURCE_DIR> -p1 -t -N < ${CMAKE_SOURCE_DIR}/patches/osg/0005-CullSettings-make-inheritanceMask-atomic-to-silence-.patch
 )
 
 ExternalProject_Add(osg
 	DEPENDS libjpeg-turbo libpng gl4es freetype2
 
-	URL https://github.com/openscenegraph/OpenSceneGraph/archive/OpenSceneGraph-${OSG_VERSION}.tar.gz
-	https://github.com/xyzz/openmw-deps/releases/download/v0/OpenSceneGraph-${OSG_VERSION}.tar.gz
-	URL_HASH ${OSG_HASH}
+	URL https://github.com/openmw/osg/archive/${OSG_VERSION}.tar.gz
+#	https://github.com/xyzz/openmw-deps/releases/download/v0/OpenSceneGraph-${OSG_VERSION}.tar.gz
+#	URL_HASH ${OSG_HASH}
 	DOWNLOAD_DIR ${download_dir}
 
 	PATCH_COMMAND ${OSG_PATCH}
@@ -462,8 +466,8 @@ set(OPENMW_PATCH
 ExternalProject_Add(openmw
 	DEPENDS boost openal osg mygui ffmpeg sdl2 bullet lz4
 
-	URL https://github.com/OpenMW/openmw/archive/${OPENMW_VERSION}.tar.gz
-	URL_HASH ${OPENMW_HASH}
+	URL https://github.com/sisah2/openmw/archive/${OPENMW_VERSION}.tar.gz
+#	URL_HASH ${OPENMW_HASH}
 	DOWNLOAD_DIR ${download_dir}
 
 	PATCH_COMMAND ${OPENMW_PATCH}
