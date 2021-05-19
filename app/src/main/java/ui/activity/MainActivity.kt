@@ -416,6 +416,14 @@ class MainActivity : AppCompatActivity() {
 
                 file.Writer.write(Constants.OPENMW_CFG, "encoding", prefs!!.getString("pref_encoding", GameInstaller.DEFAULT_CHARSET_PREF)!!)
 
+                var settingsFile = File(Constants.USER_CONFIG + "/settings.cfg")
+                var settingsFolder = File(Constants.USER_CONFIG)
+                settingsFolder.mkdirs()
+
+                val settingsFileCreated :Boolean = settingsFile.createNewFile()
+                if(settingsFileCreated)
+                    settingsFile.writeText("[GUI]")
+
                 file.Writer.write(Constants.USER_CONFIG + "/settings.cfg", "scaling factor", "%.2f".format(Locale.ROOT, scaling))
 
                 runOnUiThread {
