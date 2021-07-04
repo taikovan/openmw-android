@@ -528,13 +528,13 @@ class MainActivity : AppCompatActivity() {
                 true
             }
 
-            R.id.action_reset_config -> {
+            R.id.action_reset_config2 -> {
                 removeUserConfig()
                 Toast.makeText(this, getString(R.string.config_was_reset), Toast.LENGTH_SHORT).show()
                 true
             }
 
-            R.id.action_reset_config -> {
+            R.id.action_reset_config2 -> {
                 removeStaticFiles()
                 removeResourceFiles()
                 Toast.makeText(this, getString(R.string.config_was_reset), Toast.LENGTH_SHORT).show()
