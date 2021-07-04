@@ -11,6 +11,17 @@
             />
 
         <item
+            android:id="@+id/action_reset_config2"
+            android:title="@string/action_reset_config2"
+            app:showAsAction="never"
+            />
+        <item
+            android:id="@+id/action_reset_config3"
+            android:title="@string/action_reset_config3"
+            app:showAsAction="never"
+            />
+
+        <item
             android:id="@+id/action_bugsnag_consent"
             android:title="@string/action_bugsnag_consent"
             app:showAsAction="never"

@@ -346,6 +346,13 @@ class MainActivity : AppCompatActivity() {
         deleteRecursive(File(Constants.USER_CONFIG))
     }
 
+    /**
+     * Reset user resource files to default
+     */
+    private fun removeResourceFiles() {
+        deleteRecursive(File(Constants.USER_CONFIG + "/resources"))
+    }
+
     private fun configureDefaultsBin(args: Map<String, String>) {
         val defaults = File(Constants.DEFAULTS_BIN).readText()
         val decoded = String(Base64.getDecoder().decode(defaults))
@@ -431,6 +438,13 @@ class MainActivity : AppCompatActivity() {
 
                 file.Writer.write(Constants.OPENMW_CFG, "encoding", prefs!!.getString("pref_encoding", GameInstaller.DEFAULT_CHARSET_PREF)!!)
 
+                var src = File(Constants.RESOURCES)
+                var dst = File(Constants.USER_FILE_STORAGE + "/resources/")
+                val resourcesDirCreated :Boolean = dst.mkdirs()
+
+                if(resourcesDirCreated)
+                    src.copyRecursively(dst, false) 
+
                 configureDefaultsBin(mapOf(
                         "scaling factor" to "%.2f".format(Locale.ROOT, scaling),
                         // android-specific defaults
@@ -509,8 +523,20 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_reset_config -> {
-                removeUserConfig()
                 removeStaticFiles()
+                Toast.makeText(this, getString(R.string.config_was_reset), Toast.LENGTH_SHORT).show()
+                true
+            }
+
+            R.id.action_reset_config -> {
+                removeUserConfig()
+                Toast.makeText(this, getString(R.string.config_was_reset), Toast.LENGTH_SHORT).show()
+                true
+            }
+
+            R.id.action_reset_config -> {
+                removeStaticFiles()
+                removeResourceFiles()
                 Toast.makeText(this, getString(R.string.config_was_reset), Toast.LENGTH_SHORT).show()
                 true
             }

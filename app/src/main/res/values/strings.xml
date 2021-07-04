@@ -49,7 +49,9 @@
     <string name="uiScaling_auto">Auto (%1$.2f)</string>
     <string name="pref_screen_keeper">Keep screen always on</string>
     <string name="pref_touchpadSensitivity">Virtual touchpad sensitivity</string>
-    <string name="action_reset_config">Reset configuration files</string>
+    <string name="action_reset_config">Reset default configuration files</string>
+    <string name="action_reset_config2">Reset user configuration files</string>
+    <string name="action_reset_config3">Reset resources</string>
     <string name="action_reset_screen_controls">Reset on-screen controls</string>
     <string name="action_show_screen_controls">On-screen controls…</string>
     <string name="pref_hide_controls">Hide on-screen buttons</string>
