@@ -78,7 +78,6 @@ class GameActivity : SDLActivity() {
                 Log.e("OpenMW", "Failed setting environment variables.")
                 e.printStackTrace()
             }
-
         }
 
         System.loadLibrary("c++_shared")
@@ -94,6 +93,20 @@ class GameActivity : SDLActivity() {
             }
 
         }
+
+        val envline: String = PreferenceManager.getDefaultSharedPreferences(this).getString("envLine", "").toString()
+        if (envline.length > 0) {
+            val envs: List<String> = envline.split(" ")
+            var i = 0
+
+            repeat(envs.count())
+            {
+                val env: List<String> = envs[i].split("=")
+                Os.setenv(env[0], env[1], true)
+                i = i + 1
+            }
+        }
+
         System.loadLibrary("GL")
         System.loadLibrary("openmw")
     }
