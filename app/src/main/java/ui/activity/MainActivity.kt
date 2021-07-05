@@ -543,7 +543,7 @@ class MainActivity : AppCompatActivity() {
             R.id.action_reset_user_resources -> {
                 removeStaticFiles()
                 removeResourceFiles()
-                Toast.makeText(this, getString(R.user_resources_was_reset), Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.user_resources_was_reset), Toast.LENGTH_SHORT).show()
                 true
             }
 
