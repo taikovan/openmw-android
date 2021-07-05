@@ -350,7 +350,13 @@ class MainActivity : AppCompatActivity() {
      * Reset user resource files to default
      */
     private fun removeResourceFiles() {
-        deleteRecursive(File(Constants.USER_CONFIG + "/resources"))
+        reinstallStaticFiles()
+        deleteRecursive(File(Constants.USER_FILE_STORAGE + "/resources/"))
+
+        var src = File(Constants.RESOURCES)
+        var dst = File(Constants.USER_FILE_STORAGE + "/resources/")
+        dst.mkdirs()
+        src.copyRecursively(dst, true) 
     }
 
     private fun configureDefaultsBin(args: Map<String, String>) {
@@ -528,16 +534,16 @@ class MainActivity : AppCompatActivity() {
                 true
             }
 
-            R.id.action_reset_config2 -> {
+            R.id.action_reset_user_config -> {
                 removeUserConfig()
-                Toast.makeText(this, getString(R.string.config_was_reset), Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.user_config_was_reset), Toast.LENGTH_SHORT).show()
                 true
             }
 
-            R.id.action_reset_config2 -> {
+            R.id.action_reset_user_resources -> {
                 removeStaticFiles()
                 removeResourceFiles()
-                Toast.makeText(this, getString(R.string.config_was_reset), Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.user_resources_was_reset), Toast.LENGTH_SHORT).show()
                 true
             }
 

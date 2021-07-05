@@ -11,13 +11,13 @@
             />
 
         <item
-            android:id="@+id/action_reset_config2"
-            android:title="@string/action_reset_config2"
+            android:id="@+id/action_reset_user_config"
+            android:title="@string/action_reset_user_config"
             app:showAsAction="never"
             />
         <item
-            android:id="@+id/action_reset_config3"
-            android:title="@string/action_reset_config3"
+            android:id="@+id/action_reset_user_resources"
+            android:title="@string/action_reset_user_resources"
             app:showAsAction="never"
             />
 

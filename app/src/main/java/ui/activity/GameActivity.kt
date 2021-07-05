@@ -147,7 +147,7 @@ class GameActivity : SDLActivity() {
 
     override fun getArguments(): Array<String> {
         val cmd = PreferenceManager.getDefaultSharedPreferences(this).getString("commandLine", "")
-        val commandlineParser = CommandlineParser("--resources /storage/emulated/0/omw_nightly/resources " + cmd!!)
+        val commandlineParser = CommandlineParser("--resources " + USER_FILE_STORAGE + "/resources" + cmd!!)
         return commandlineParser.argv
     }
 
