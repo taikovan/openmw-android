@@ -102,7 +102,7 @@ class GameActivity : SDLActivity() {
             repeat(envs.count())
             {
                 val env: List<String> = envs[i].split("=")
-                Os.setenv(env[0], env[1], true)
+                if (env.count() == 2) Os.setenv(env[0], env[1], true)
                 i = i + 1
             }
         }
