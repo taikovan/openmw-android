@@ -444,7 +444,6 @@ class MainActivity : AppCompatActivity() {
 
                 file.Writer.write(Constants.OPENMW_CFG, "encoding", prefs!!.getString("pref_encoding", GameInstaller.DEFAULT_CHARSET_PREF)!!)
 
-<<<<<<< HEAD
                 var src = File(Constants.RESOURCES)
                 var dst = File(Constants.USER_FILE_STORAGE + "/resources/")
                 val resourcesDirCreated :Boolean = dst.mkdirs()
@@ -452,8 +451,6 @@ class MainActivity : AppCompatActivity() {
                 if(resourcesDirCreated)
                     src.copyRecursively(dst, false) 
 
-=======
->>>>>>> xyzz/master
                 configureDefaultsBin(mapOf(
                         "scaling factor" to "%.2f".format(Locale.ROOT, scaling),
                         // android-specific defaults
