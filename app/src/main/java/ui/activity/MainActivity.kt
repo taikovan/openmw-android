@@ -406,8 +406,6 @@ class MainActivity : AppCompatActivity() {
             // can't really do much if that fails...
         }
 
-Os.setenv("OSG_VERTEX_BUFFER_HINT", "VERTEX_ARRAY_OBJECT", true)
-
         // If scaling didn't get set, determine it automatically
         if (scaling == 0f) {
             scaling = MyApp.app.defaultScaling
