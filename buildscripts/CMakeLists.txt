@@ -315,7 +315,7 @@ ExternalProject_Add(bullet
 ExternalProject_Add(gl4es
 	URL https://github.com/ptitSeb/gl4es/archive/${GL4ES_VERSION}.tar.gz
 	https://github.com/xyzz/openmw-deps/releases/download/v0/gl4es-${GL4ES_VERSION}.gz
-	URL_HASH ${GL4ES_HASH}
+	#URL_HASH ${GL4ES_HASH}
 	DOWNLOAD_DIR ${download_dir}
 
 	PATCH_COMMAND patch -d <SOURCE_DIR> -p1 -t -N < ${CMAKE_SOURCE_DIR}/patches/gl4es/shared-library.patch
