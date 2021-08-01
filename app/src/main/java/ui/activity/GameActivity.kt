@@ -94,6 +94,9 @@ class GameActivity : SDLActivity() {
 
         }
 
+        Os.setenv("OSG_VERTEX_BUFFER_HINT", "VBO", true)
+        Os.setenv("LIBGL_NOHIGHP", "1", true)
+
         val envline: String = PreferenceManager.getDefaultSharedPreferences(this).getString("envLine", "").toString()
         if (envline.length > 0) {
             val envs: List<String> = envline.split(" ", "\n")
