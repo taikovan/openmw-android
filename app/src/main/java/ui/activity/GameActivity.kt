@@ -94,8 +94,10 @@ class GameActivity : SDLActivity() {
 
         }
 
-        Os.setenv("OSG_VERTEX_BUFFER_HINT", "VBO", true)
-        Os.setenv("LIBGL_NOHIGHP", "1", true)
+
+        Os.setenv("OPENMW_USER_FILE_STORAGE", Constants.USER_FILE_STORAGE + "/", true)
+        Nohighp()
+        OSGVBO()
 
         val envline: String = PreferenceManager.getDefaultSharedPreferences(this).getString("envLine", "").toString()
         if (envline.length > 0) {
@@ -148,6 +150,20 @@ class GameActivity : SDLActivity() {
         }
     }
 
+    private fun Nohighp() {
+        val needNohighpOn = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("pref_nohighp", false)
+        if (needNohighpOn) {
+            Os.setenv("LIBGL_NOHIGHP", "1", true)
+        }
+    }
+
+    private fun OSGVBO() {
+        val needOSGVBOOn = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("pref_OSGVBO", false)
+        if (needOSGVBOOn) {
+            Os.setenv("OSG_VERTEX_BUFFER_HINT", "VBO", true)
+        }
+    }
+
     public override fun onDestroy() {
         finish()
         Process.killProcess(Process.myPid())
@@ -163,7 +179,7 @@ class GameActivity : SDLActivity() {
 
     override fun getArguments(): Array<String> {
         val cmd = PreferenceManager.getDefaultSharedPreferences(this).getString("commandLine", "")
-        val commandlineParser = CommandlineParser("--resources " + Constants.USER_FILE_STORAGE + "/resources" + cmd!!)
+        val commandlineParser = CommandlineParser("--resources " + Constants.USER_FILE_STORAGE + "/resources " + cmd!!)
         return commandlineParser.argv
     }
 

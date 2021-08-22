@@ -44,6 +44,8 @@
     <string name="pref_advanced">Advanced</string>
     <string name="pref_commandLine">Custom command line arguments</string>
     <string name="pref_envLine">Custom environment flags</string>
+    <string name="pref_nohighp">Medium shader precision</string>
+    <string name="pref_OSGVBO">OSG VBO vertex buffer hint</string>
     <string name="pref_ui">User interface</string>
     <string name="pref_gamma">Gamma</string>
     <string name="pref_uiScaling">UI scaling factor</string>
@@ -80,6 +82,8 @@
     </string-array>
 
     <string-array name="pref_physicsFPS2_entries">
+        <item>1</item>
+        <item>20</item>
         <item>30</item>
         <item>60</item>
     </string-array>

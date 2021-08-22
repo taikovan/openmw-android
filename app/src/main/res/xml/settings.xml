@@ -96,6 +96,15 @@
             android:defaultValue="@string/pref_physicsFPS2_default"
             android:summary="%s"
             />
+
+        <CheckBoxPreference
+            android:key="pref_nohighp"
+            android:title="@string/pref_nohighp"/>
+
+        <CheckBoxPreference
+            android:key="pref_OSGVBO"
+            android:title="@string/pref_OSGVBO"
+            android:defaultValue="true"/>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_advanced">
@@ -108,7 +117,7 @@
             android:key="envLine"
             android:title="@string/pref_envLine"
             />
-
+<!--
         <ListPreference
             android:key="pref_graphicsLibrary_v2"
             android:title="@string/pref_graphicsLibrary"
@@ -118,6 +127,7 @@
             android:defaultValue="@string/pref_graphicsLibrary_default"
             android:summary="%s"
         />
+-->
     </PreferenceCategory>
 
 </PreferenceScreen>

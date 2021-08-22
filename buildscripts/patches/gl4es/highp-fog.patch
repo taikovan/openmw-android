@@ -1,0 +1,31 @@
+diff --git a/src/gl/shaderconv.c b/src/gl/shaderconv.c
+index e25ea8c3..5e89615b 100644
+--- a/src/gl/shaderconv.c
++++ b/src/gl/shaderconv.c
+@@ -192,15 +192,6 @@ static const char* gl4es_PointSpriteSource =
+ "};\n"
+ "uniform gl_PointParameters gl_Point;\n";
+ 
+-static const char* gl4es_FogParametersSource =
+-"struct gl_FogParameters {\n"
+-"    lowp vec4 color;\n"
+-"    mediump float density;\n"
+-"    mediump float start;\n"
+-"    mediump float end;\n"
+-"    mediump float scale;\n"   // Derived:   1.0 / (end - start) 
+-"};\n"
+-"uniform gl_FogParameters gl_Fog;\n";
+ static const char* gl4es_FogParametersSourceHighp =
+ "struct gl_FogParameters {\n"
+ "    lowp vec4 color;\n"
+@@ -1029,8 +1020,8 @@ char* ConvertShader(const char* pEntry, int isVertex, shaderconv_need_t *need)
+     Tmp = InplaceReplace(Tmp, &tmpsize, "gl_Point", "_gl4es_Point");
+   if(strstr(Tmp, "gl_FogParameters") || strstr(Tmp, "gl_Fog"))
+     {
+-      Tmp = InplaceInsert(GetLine(Tmp, headline), hardext.highp?gl4es_FogParametersSourceHighp:gl4es_FogParametersSource, Tmp, &tmpsize);
+-      headline+=CountLine(gl4es_FogParametersSource);
++      Tmp = InplaceInsert(GetLine(Tmp, headline), gl4es_FogParametersSourceHighp, Tmp, &tmpsize);
++      headline+=CountLine(gl4es_FogParametersSourceHighp);
+       Tmp = InplaceReplace(Tmp, &tmpsize, "gl_FogParameters", "_gl4es_FogParameters");
+     }
+   if(strstr(Tmp, "gl_Fog"))

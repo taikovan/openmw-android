@@ -1,21 +1,22 @@
 diff --git a/src/gl/hint.c b/src/gl/hint.c
-index feef2e30..b8cb54e9 100644
+index feef2e30..354a62fa 100644
 --- a/src/gl/hint.c
 +++ b/src/gl/hint.c
-@@ -12,6 +12,12 @@ void pandora_set_gamma();
+@@ -12,6 +12,13 @@ void pandora_set_gamma();
  
  void APIENTRY_GL4ES gl4es_glHint(GLenum pname, GLenum mode) {
      
-+//save precomipled shader archive
++//hack, save precomipled shader archive
 +if(pname == 41231){
 +    fpe_writePSA();
 +    return;
 +}
 +
++
      FLUSH_BEGINEND;
  
      LOAD_GLES(glHint);
-@@ -132,4 +138,4 @@ void APIENTRY_GL4ES gl4es_glHint(GLenum pname, GLenum mode) {
+@@ -132,4 +139,4 @@ void APIENTRY_GL4ES gl4es_glHint(GLenum pname, GLenum mode) {
              gles_glHint(pname, mode);
      }
  }
@@ -23,30 +24,37 @@ index feef2e30..b8cb54e9 100644
 \ No newline at end of file
 +AliasExport(void,glHint,,(GLenum pname, GLenum mode));
 diff --git a/src/gl/init.c b/src/gl/init.c
-index ca5d9c5d..9c41d6f7 100644
+index b182ba9b..c56eb9a0 100644
 --- a/src/gl/init.c
 +++ b/src/gl/init.c
-@@ -668,7 +668,7 @@ void initialize_gl4es() {
+@@ -668,18 +668,14 @@ void initialize_gl4es() {
          env(LIBGL_NOPSA, globals4es.nopsa, "Don't use PrecompiledShaderArchive");
          if(globals4es.nopsa==0) {
              cwd[0]='\0';
 -            // TODO: What to do on ANDROID and EMSCRIPTEN?
-+/*            // TODO: What to do on ANDROID and EMSCRIPTEN?
- #ifdef __linux__
-             const char* home = GetEnvVar("HOME");
-             if(home)
-@@ -678,6 +678,9 @@ void initialize_gl4es() {
- #elif defined AMIGAOS4
-             strcpy(cwd, "PROGDIR:");
- #endif
-+*/
-+            strcpy(cwd, "/storage/emulated/0/omw_nightly/");
+-#ifdef __linux__
+-            const char* home = GetEnvVar("HOME");
+-            if(home)
+-                strcpy(cwd, home);
+-            if(cwd[strlen(cwd)]!='/')
+-                strcat(cwd, "/");
+-#elif defined AMIGAOS4
+-            strcpy(cwd, "PROGDIR:");
+-#endif
++
++            strcpy(cwd, GetEnvVar("OPENMW_USER_FILE_STORAGE"));
 +
              if(strlen(cwd)) {
-                 strcat(cwd, ".gl4es.psa");
+-                strcat(cwd, ".gl4es.psa");
++                if(globals4es.nohighp)
++                    strcat(cwd, ".gl4es.psa-mediump");
++                else
++                    strcat(cwd, ".gl4es.psa-highp");
                  fpe_InitPSA(cwd);
+                 fpe_readPSA();
+             }
 diff --git a/src/glx/hardext.c b/src/glx/hardext.c
-index 65c11f12..1d747483 100644
+index 6b8212ad..307c290b 100644
 --- a/src/glx/hardext.c
 +++ b/src/glx/hardext.c
 @@ -357,7 +357,7 @@ void GetHardwareExtensions(int notest)
