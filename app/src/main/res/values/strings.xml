@@ -47,7 +47,7 @@
     <string name="pref_nohighp">Medium shader precision</string>
     <string name="pref_OSGVBO">OSG VBO vertex buffer hint</string>
     <string name="pref_ui">User interface</string>
-    <string name="pref_textureShrinking">Texture Shrinking</string>
+    <string name="pref_textureShrinking">Texture shrinking</string>
     <string name="pref_textureShrinking_default">none</string>
     <string name="pref_gamma">Gamma</string>
     <string name="pref_uiScaling">UI scaling factor</string>

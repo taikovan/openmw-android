@@ -97,8 +97,8 @@ class GameActivity : SDLActivity() {
         val textureShrinkingOption = prefs!!.getString("pref_textureShrinking_v2", "")
         if (textureShrinkingOption == "low") Os.setenv("LIBGL_SHRINK", "8", true)
         if (textureShrinkingOption == "medium") Os.setenv("LIBGL_SHRINK", "10", true)
-        if (textureShrinkingOption == "high") Os.setenv("LIBGL_SHRINK", "6", true)
-        if (textureShrinkingOption == "highest") Os.setenv("LIBGL_SHRINK", "7", true)
+        if (textureShrinkingOption == "high") Os.setenv("LIBGL_SHRINK", "7", true)
+        if (textureShrinkingOption == "highest") Os.setenv("LIBGL_SHRINK", "6", true)
 
         Os.setenv("OPENMW_USER_FILE_STORAGE", Constants.USER_FILE_STORAGE + "/", true)
         Nohighp()
