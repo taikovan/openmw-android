@@ -42,6 +42,7 @@
     <string name="pref_graphicsLibrary">Graphics library</string>
     <string name="pref_graphicsLibrary_default">gles2</string>
     <string name="pref_advanced">Advanced</string>
+    <string name="pref_graphics">Graphics</string>
     <string name="pref_commandLine">Custom command line arguments</string>
     <string name="pref_envLine">Custom environment flags</string>
     <string name="pref_nohighp">Medium shader precision</string>
@@ -49,6 +50,8 @@
     <string name="pref_ui">User interface</string>
     <string name="pref_textureShrinking">Texture shrinking</string>
     <string name="pref_textureShrinking_default">none</string>
+    <string name="pref_shadersDir">Shaders preset</string>
+    <string name="pref_shadersDir_default">modified</string>
     <string name="pref_gamma">Gamma</string>
     <string name="pref_uiScaling">UI scaling factor</string>
     <string name="uiScaling_auto">Auto (%1$.2f)</string>
@@ -91,11 +94,10 @@
 
 
     <string-array name="pref_textureShrinking_entries">
-        <item>none</item>
-        <item>low</item>
-        <item>medium</item>
-        <item>high</item>
-        <item>highest</item>
+        <item>None</item>
+        <item>Low</item>
+        <item>Medium</item>
+        <item>High</item>
     </string-array>
 
     <string-array name="pref_textureShrinking_values">
@@ -103,7 +105,18 @@
         <item>low</item>
         <item>medium</item>
         <item>high</item>
-        <item>highest</item>
+    </string-array>
+
+    <string-array name="pref_shadersDir_entries">
+        <item>Modified</item>
+        <item>Vtastek PBR</item>
+        <item>Original</item>
+    </string-array>
+
+    <string-array name="pref_shadersDir_values">
+        <item>modified</item>
+        <item>pbr</item>
+        <item>none</item>
     </string-array>
 
     <string name="pref_unsafe_state_graph">Enable unsafe graphics optimizations</string>
