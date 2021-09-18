@@ -99,13 +99,19 @@ class GameActivity : SDLActivity() {
         if (textureShrinkingOption == "medium") Os.setenv("LIBGL_SHRINK", "7", true)
         if (textureShrinkingOption == "high") Os.setenv("LIBGL_SHRINK", "6", true)
 
-        val shaderDirOption = prefs!!.getString("pref_textureShrinking_v2", "")
+        val shaderDirOption = prefs!!.getString("pref_shadersDir_v2", "")
         if (shaderDirOption == "modified") Os.setenv("OPENMW_SHADERS", "modified", true)
         if (shaderDirOption == "pbr") Os.setenv("OPENMW_SHADERS", "pbr", true)
 
+        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("pref_nohighp", false) && shaderDirOption == "modified") {
+            Os.setenv("LIBGL_NOHIGHP", "1", true)
+        }
+
+        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("pref_OSGVBO", false)) {
+            Os.setenv("OSG_VERTEX_BUFFER_HINT", "VBO", true)
+        }
+
         Os.setenv("OPENMW_USER_FILE_STORAGE", Constants.USER_FILE_STORAGE + "/", true)
-        Nohighp()
-        OSGVBO()
 
         val envline: String = PreferenceManager.getDefaultSharedPreferences(this).getString("envLine", "").toString()
         if (envline.length > 0) {
@@ -155,20 +161,6 @@ class GameActivity : SDLActivity() {
         val needKeepScreenOn = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("pref_screen_keeper", false)
         if (needKeepScreenOn) {
             window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        }
-    }
-
-    private fun Nohighp() {
-        val needNohighpOn = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("pref_nohighp", false)
-        if (needNohighpOn) {
-            Os.setenv("LIBGL_NOHIGHP", "1", true)
-        }
-    }
-
-    private fun OSGVBO() {
-        val needOSGVBOOn = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("pref_OSGVBO", false)
-        if (needOSGVBOOn) {
-            Os.setenv("OSG_VERTEX_BUFFER_HINT", "VBO", true)
         }
     }
 
