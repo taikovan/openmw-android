@@ -7,7 +7,7 @@ index dd6ad8d6..307d5cde 100755
      }
  
 +    if(globals4es.gamma != 0.0) {
-+        sprintf(buff, "fColor.rgb = pow(fColor, vec3(1.0/%f));\n", globals4es.gamma);
++        sprintf(buff, "fColor.rgb = pow(fColor.rgb, vec3(1.0/%f));\n", globals4es.gamma);
 +        ShadAppend(buff);
 +    }
 +
