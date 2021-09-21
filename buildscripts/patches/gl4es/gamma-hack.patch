@@ -42,7 +42,7 @@ index b2f98285..f32d7341 100755
    
 +  if(globals4es.gamma != 0.0) {
 +    char shaderHack[200];
-+    sprintf(shaderHack, "applyShadowDebugOverlay(); /n  gl_FragData[0].xyz = pow(gl_FragData[0].xyz, vec3(1.0/%f));", globals4es.gamma);
++    sprintf(shaderHack, "applyShadowDebugOverlay(); \n    gl_FragData[0].xyz = pow(gl_FragData[0].xyz, vec3(1.0/%f));", globals4es.gamma);
 +    Tmp = InplaceReplace(Tmp, &tmpsize, "applyShadowDebugOverlay();", shaderHack);
 +  }
 +
