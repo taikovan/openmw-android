@@ -49,10 +49,3 @@ index b2f98285..f32d7341 100755
    // finish
    if((globals4es.dbgshaderconv&maskafter)==maskafter) {
      printf("New Shader source:\n%s\n", Tmp);
-@@ -1303,4 +1309,4 @@ const char* builtinAttribInternalName(const char* name) {
-     return gl4es_VA[n];
-   }
-   return name;
--}
-\ No newline at end of file
-+}
