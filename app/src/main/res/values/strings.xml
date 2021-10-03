@@ -111,12 +111,14 @@
         <item>Modified</item>
         <item>Vtastek PBR</item>
         <item>Original</item>
+        <item>Experimental</item>
     </string-array>
 
     <string-array name="pref_shadersDir_values">
         <item>modified</item>
         <item>pbr</item>
         <item>none</item>
+        <item>experimental</item>
     </string-array>
 
     <string name="pref_unsafe_state_graph">Enable unsafe graphics optimizations</string>
