@@ -41,7 +41,7 @@ set(GL4ES_VERSION v1.1.4)
 set(GL4ES_HASH SHA256=b565e717c7d192e936bda25f3cb90ad8db398af56414ec08294b6716574c1a6d)
 
 # https://github.com/openscenegraph/OpenSceneGraph/releases
-set(OSG_VERSION 76e061739610bc9a3420a59e7c9395e742ce2f97)
+set(OSG_VERSION bbe61c3bc510a4f5bb4aea21cce506519c2d24e6)
 set(OSG_HASH SHA256=aea196550f02974d6d09291c5d83b51ca6a03b3767e234a8c0e21322927d1e12)
 
 # https://github.com/lz4/lz4/releases
@@ -53,7 +53,7 @@ set(LUAJIT_VERSION 2.1.0-beta3)
 set(LUAJIT_HASH SHA256=1ad2e34b111c802f9d0cdf019e986909123237a28c746b21295b63c9e785d9c3)
 
 # https://github.com/OpenMW/openmw/commits/master
-set(OPENMW_VERSION e8aa087a721d386cafe2ebf29d5b21bb20721a27)
+set(OPENMW_VERSION 414e1914b612d9d857d55f02b352b8bd1ef8d6de)
 set(OPENMW_HASH SHA256=44d044ad0a5546216fe611fe92c37065bb07e2efeeeaac4f049dae03df313186)
 
 # End of configurable options
@@ -75,6 +75,7 @@ set(COMMON_CMAKE_ARGS
 	-DANDROID_ABI=${app_abi}
 	-DANDROID_PLATFORM=${android_platform}
 	-DANDROID_STL=c++_shared
+	-DANDROID_LD=deprecated
 	-DANDROID_CPP_FEATURES=rtti\ exceptions
 	-DCMAKE_C_FLAGS=-DMYGUI_DONT_REPLACE_NULLPTR\ -I${prefix}/include/\ $ENV{CFLAGS}
 	-DCMAKE_CXX_FLAGS=-DMYGUI_DONT_REPLACE_NULLPTR\ -I${prefix}/include/\ $ENV{CXXFLAGS}
@@ -90,6 +91,7 @@ set(COMMON_NDK_BUILD_FLAGS
 	APP_BUILD_SCRIPT=<SOURCE_DIR>/Android.mk
 	APP_PLATFORM=${android_platform}
 	APP_ABI=${app_abi}
+	APP_LD=deprecated
 	LOCAL_LDFLAGS=$ENV{LDFLAGS}
 	-j4
 )
@@ -406,11 +408,72 @@ ExternalProject_Add(luajit
 	COMMAND bash -c "rm ${prefix}/lib/libluajit*.so*"
 )
 
+ExternalProject_Add(zlib
+		URL https://github.com/madler/zlib/archive/refs/tags/v1.2.11.tar.gz
+		URL_HASH SHA256=629380c90a77b964d896ed37163f5c3a34f6e6d897311f1df2a7016355c45eff
+		DOWNLOAD_DIR ${download_dir}
+
+		CONFIGURE_COMMAND ${wrapper_command} cmake <SOURCE_DIR>
+		${COMMON_CMAKE_ARGS}
+
+		BUILD_COMMAND ${wrapper_command} $(MAKE)
+		INSTALL_COMMAND ${wrapper_command} $(MAKE) install
+)
+
+ExternalProject_Add(libxml
+		DEPENDS zlib
+
+		URL https://github.com/GNOME/libxml2/archive/refs/tags/v2.9.12.tar.gz
+		URL_HASH SHA256=8a4ddd706419c210b30b8978a51388937fd9362c34fc9a3d69e4fcc6f8055ee0
+		DOWNLOAD_DIR ${download_dir}
+
+		CONFIGURE_COMMAND ${wrapper_command} cmake <SOURCE_DIR>
+		${COMMON_CMAKE_ARGS}
+		-DBUILD_SHARED_LIBS=OFF
+		-DLIBXML2_WITH_CATALOG=OFF
+		-DLIBXML2_WITH_ICONV=OFF
+		-DLIBXML2_WITH_LZMA=OFF
+		-DLIBXML2_WITH_PROGRAMS=OFF
+		-DLIBXML2_WITH_PYTHON=OFF
+		-DLIBXML2_WITH_TESTS=OFF
+		-DLIBXML2_WITH_ZLIB=ON
+
+		BUILD_COMMAND ${wrapper_command} $(MAKE)
+
+		INSTALL_COMMAND ${wrapper_command} $(MAKE) install
+)
+
+set(LIBCOLLADA_PATCH patch -d <SOURCE_DIR> -p0 -t -N < ${CMAKE_SOURCE_DIR}/patches/libcollada-minizip-fix.patch)
+
+ExternalProject_Add(libcollada
+		DEPENDS libxml boost
+
+		URL https://github.com/rdiankov/collada-dom/archive/v2.5.0.tar.gz
+		URL_HASH SHA256=3be672407a7aef60b64ce4b39704b32816b0b28f61ebffd4fbd02c8012901e0d
+		DOWNLOAD_DIR ${download_dir}
+
+		PATCH_COMMAND ${LIBCOLLADA_PATCH}
+
+		CONFIGURE_COMMAND ${wrapper_command} cmake <SOURCE_DIR>
+		${COMMON_CMAKE_ARGS}
+		-DBoost_USE_STATIC_LIBS=ON
+		-DBoost_USE_STATIC_RUNTIME=ON
+		-DBoost_NO_SYSTEM_PATHS=ON
+		-DBoost_INCLUDE_DIR=${prefix}/include
+		-DHAVE_STRTOQ=0
+		-DUSE_FILE32API=1
+
+		BUILD_COMMAND ${wrapper_command} $(MAKE)
+
+		INSTALL_COMMAND ${wrapper_command} $(MAKE) install
+)
+
 set(OSG_COMMON
 	-DOPENGL_PROFILE="GL1"
 	-DDYNAMIC_OPENTHREADS=OFF
 	-DDYNAMIC_OPENSCENEGRAPH=OFF
 	-DBUILD_OSG_PLUGIN_OSG=ON
+	-DBUILD_OSG_PLUGIN_DAE=ON
 	-DBUILD_OSG_PLUGIN_DDS=ON
 	-DBUILD_OSG_PLUGIN_TGA=ON
 	-DBUILD_OSG_PLUGIN_BMP=ON
@@ -445,12 +508,13 @@ set(OSG_PATCH
 	patch -d <SOURCE_DIR> -p1 -t -N < ${CMAKE_SOURCE_DIR}/patches/osg/0002-BufferObject-make-numClients-atomic.patch &&
 	patch -d <SOURCE_DIR> -p1 -t -N < ${CMAKE_SOURCE_DIR}/patches/osg/0004-IncrementalCompileOperation-wrap-some-stuff-in-atomi.patch &&
 	patch -d <SOURCE_DIR> -p1 -t -N < ${CMAKE_SOURCE_DIR}/patches/osg/remove-zlib-dependency.patch &&
+	patch -d <SOURCE_DIR> -p1 -t -N < ${CMAKE_SOURCE_DIR}/patches/osg/dae_collada.patch &&
 	patch -d <SOURCE_DIR> -p1 -t -N < ${CMAKE_SOURCE_DIR}/patches/osg/psa.patch &&
 	patch -d <SOURCE_DIR> -p1 -t -N < ${CMAKE_SOURCE_DIR}/patches/osg/0005-CullSettings-make-inheritanceMask-atomic-to-silence-.patch
 )
 
 ExternalProject_Add(osg
-	DEPENDS libjpeg-turbo libpng gl4es freetype2
+	DEPENDS libjpeg-turbo libpng gl4es freetype2 libcollada
 
 	URL https://github.com/openmw/osg/archive/${OSG_VERSION}.tar.gz
 #	https://github.com/xyzz/openmw-deps/releases/download/v0/OpenSceneGraph-${OSG_VERSION}.tar.gz
