@@ -53,7 +53,7 @@ class ModsActivity : AppCompatActivity() {
             override fun onTabSelected(tab: TabLayout.Tab) {
 
                 // Clear plugins/resources list when moving to data tab, to update it fast later
-                if(tab.position == 3) {
+                if(tab.position == 2) {
                     mPluginAdapter.notifyItemRangeRemoved(0, mPluginAdapter.collection.mods.size)
                     mResourceAdapter.notifyItemRangeRemoved(0, mResourceAdapter.collection.mods.size)
                 }
@@ -97,7 +97,7 @@ class ModsActivity : AppCompatActivity() {
             .forEach { enabledDataDirs.add(it.filename) }
 
 	File(GameInstaller.getDataFiles(this) + "/../").listFiles().forEach {
-	    if (!it.isFile() && it.getName() != "Data Files" && enabledDataDirs.contains(it.getName()) )
+	    if (!it.isFile() /**&& it.getName() != "Data Files"*/ && enabledDataDirs.contains(it.getName()) )
 	        dataFilesList.add(GameInstaller.getDataFiles(this) + "/../" + it.getName())
 	}
 
