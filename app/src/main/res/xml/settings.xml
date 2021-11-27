@@ -81,11 +81,6 @@
             android:defaultValue="@string/pref_physicsFPS2_default"
             android:summary="%s"
             />
-
-        <CheckBoxPreference
-            android:key="pref_OSGVBO"
-            android:title="@string/pref_OSGVBO"
-            android:defaultValue="true"/>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_graphics">

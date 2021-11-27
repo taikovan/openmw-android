@@ -105,10 +105,7 @@ class GameActivity : SDLActivity() {
 	    Os.setenv("LIBGL_NOHIGHP", "1", true)
 	}
 
-        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("pref_OSGVBO", false)) {
-            Os.setenv("OSG_VERTEX_BUFFER_HINT", "VBO", true)
-        }
-
+        Os.setenv("OSG_VERTEX_BUFFER_HINT", "VBO", true)
         Os.setenv("OPENMW_USER_FILE_STORAGE", Constants.USER_FILE_STORAGE + "/", true)
 
         val envline: String = PreferenceManager.getDefaultSharedPreferences(this).getString("envLine", "").toString()
