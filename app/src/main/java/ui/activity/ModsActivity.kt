@@ -31,9 +31,13 @@ import file.GameInstaller
 import kotlinx.android.synthetic.main.activity_mods.*
 import mods.*
 import android.view.MenuItem
-
+import java.io.File
 
 class ModsActivity : AppCompatActivity() {
+
+    val mPluginAdapter = ModsAdapter()
+    val mResourceAdapter = ModsAdapter()
+    val mDirAdapter = ModsAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +51,17 @@ class ModsActivity : AppCompatActivity() {
         // Switch tabs between plugins/resources
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
+
+                // Clear plugins/resources list when moving to data tab, to update it fast later
+                if(tab.position == 3) {
+                    mPluginAdapter.notifyItemRangeRemoved(0, mPluginAdapter.collection.mods.size)
+                    mResourceAdapter.notifyItemRangeRemoved(0, mResourceAdapter.collection.mods.size)
+                }
+
+                //Reload mod list when moving from data dir tab
+                if(flipper.displayedChild == 2)
+                    updateModList()
+
                 flipper.displayedChild = tab.position
             }
 
@@ -60,6 +75,34 @@ class ModsActivity : AppCompatActivity() {
         // Set up adapters for the lists
         setupModList(findViewById(R.id.list_mods), ModType.Plugin)
         setupModList(findViewById(R.id.list_resources), ModType.Resource)
+        setupModList(findViewById(R.id.list_dirs), ModType.Dir)
+
+        updateModList()
+    }
+
+    private fun updateModList() {
+
+	var dataFilesList = ArrayList<String>()
+	dataFilesList.add(GameInstaller.getDataFiles(this))
+
+	// Get list of enabled data directories
+	var dataDirs = ArrayList<String>()
+	var enabledDataDirs = ArrayList<String>()
+	enabledDataDirs.add(GameInstaller.getDataFiles(this))
+	dataDirs.add(GameInstaller.getDataFiles(this) + "/../")
+	val availableDirs = ModsCollection(ModType.Dir, dataDirs, database)
+
+	availableDirs.mods
+	    .filter { it.enabled }
+            .forEach { enabledDataDirs.add(it.filename) }
+
+	File(GameInstaller.getDataFiles(this) + "/../").listFiles().forEach {
+	    if (!it.isFile() && it.getName() != "Data Files" && enabledDataDirs.contains(it.getName()) )
+	        dataFilesList.add(GameInstaller.getDataFiles(this) + "/../" + it.getName())
+	}
+
+        mPluginAdapter.collection = ModsCollection(ModType.Plugin, dataFilesList, database)
+        mResourceAdapter.collection = ModsCollection(ModType.Resource, dataFilesList, database)
     }
 
     /**
@@ -68,23 +111,43 @@ class ModsActivity : AppCompatActivity() {
      * @param type Type of the mods this list will contain
      */
     private fun setupModList(list: RecyclerView, type: ModType) {
-        val dataFiles = GameInstaller.getDataFiles(this)
+
+	var dataFilesList = ArrayList<String>()
+
+	if (type == ModType.Dir) 
+            dataFilesList.add(GameInstaller.getDataFiles(this) + "/../")
+	else 
+	    dataFilesList.add(GameInstaller.getDataFiles(this))
 
         val linearLayoutManager = LinearLayoutManager(this)
         linearLayoutManager.orientation = RecyclerView.VERTICAL
         list.layoutManager = linearLayoutManager
 
-        // Set up the adapter using the specified ModsCollection
-        val adapter = ModsAdapter(ModsCollection(type, dataFiles, database))
+	if (type == ModType.Plugin) {
+	    mPluginAdapter.collection = ModsCollection(type, dataFilesList, database)
+            val callback = ModMoveCallback(mPluginAdapter)
+            val touchHelper = ItemTouchHelper(callback)
+            touchHelper.attachToRecyclerView(list)
+            mPluginAdapter.touchHelper = touchHelper
+            list.adapter = mPluginAdapter
+	}
+	else if (type == ModType.Resource) {
+	    mResourceAdapter.collection = ModsCollection(type, dataFilesList, database)
+            val callback = ModMoveCallback(mResourceAdapter)
+            val touchHelper = ItemTouchHelper(callback)
+            touchHelper.attachToRecyclerView(list)
+            mResourceAdapter.touchHelper = touchHelper
+            list.adapter = mResourceAdapter
+        }
+        else {
+	    mDirAdapter.collection = ModsCollection(type, dataFilesList, database)
+            val callback = ModMoveCallback(mDirAdapter)
+            val touchHelper = ItemTouchHelper(callback)
+            touchHelper.attachToRecyclerView(list)
+            mDirAdapter.touchHelper = touchHelper
+            list.adapter = mDirAdapter
+        }
 
-        // Set up the drag-and-drop callback
-        val callback = ModMoveCallback(adapter)
-        val touchHelper = ItemTouchHelper(callback)
-        touchHelper.attachToRecyclerView(list)
-
-        adapter.touchHelper = touchHelper
-
-        list.adapter = adapter
     }
 
     /**

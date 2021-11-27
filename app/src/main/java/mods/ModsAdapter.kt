@@ -36,9 +36,10 @@ import java.util.*
 /**
  * An adapter to put a ModsCollection into a UI list
  */
-class ModsAdapter(private val collection: ModsCollection) : RecyclerView.Adapter<ModsAdapter.ModViewHolder>() {
+class ModsAdapter() : RecyclerView.Adapter<ModsAdapter.ModViewHolder>() {
 
     lateinit var touchHelper: ItemTouchHelper
+    lateinit var collection: ModsCollection
 
     /**
      * A row representation of a mod

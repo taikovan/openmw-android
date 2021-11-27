@@ -28,14 +28,16 @@ import java.io.File
  * @param dataFiles Path to the directory of the mods (the Data Files directory)
  */
 class ModsCollection(private val type: ModType,
-                     private val dataFiles: String,
+                     private val dataFiles: ArrayList<String>,
                      private val db: ModsDatabaseOpenHelper) {
 
     val mods = arrayListOf<Mod>()
     private var extensions: Array<String> = if (type == ModType.Resource)
         arrayOf("bsa")
+    else if (type == ModType.Dir)
+        arrayOf("")
     else
-        arrayOf("esm", "esp", "omwaddon", "omwgame")
+        arrayOf("esm", "esp", "omwaddon", "omwgame", "omwscripts")
 
     init {
         if (isEmpty())
@@ -78,14 +80,18 @@ class ModsCollection(private val type: ModType,
      * @param type Type of the mods (plugins/resources)
      */
     private fun initDbMods(files: List<String>, type: ModType) {
-        db.use {
-            var order = 0
-            files
-                .map { File(dataFiles, it) }
-                .filter { it.exists() }
-                .map { order += 1; Mod(type, it.name, order, true) }
-                .forEach { it.insert(this) }
-        }
+        var order = 0
+	var counter = 0
+	repeat(dataFiles.size) {
+            db.use {
+                files
+                    .map { File(dataFiles.elementAt(counter), it) }
+                    .filter { it.exists() }
+                    .map { order += 1; Mod(type, it.name, order, true) }
+                    .forEach { it.insert(this) }
+            }
+	    counter = counter +1
+	}
     }
 
     /**
@@ -103,16 +109,22 @@ class ModsCollection(private val type: ModType,
                 }
         }
 
-        // Get file names matching the extensions
-        val modFiles = File(dataFiles).listFiles()?.filter {
-            extensions.contains(it.extension.toLowerCase())
-        }
-
-        // Collect filenames of mods on the FS
         val fsNames = mutableSetOf<String>()
-        modFiles?.forEach {
-            fsNames.add(it.name)
-        }
+	var counter = 0
+
+	repeat(dataFiles.size) {
+
+     	   // Get file names matching the extensions
+     	   var modFiles = File(dataFiles.elementAt(counter)).listFiles()?.filter {
+     	       extensions.contains(it.extension.toLowerCase())
+     	   }
+
+     	   // Collect filenames of mods on the FS
+      	   modFiles?.forEach {
+     	       if(it.name != "Data Files") fsNames.add(it.name)
+     	   }
+     	   counter = counter + 1
+	}
 
         // Collect filenames of mods in the DB
         val dbNames = mutableSetOf<String>()

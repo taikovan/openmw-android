@@ -176,7 +176,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Second, check if user has at least one mod enabled
-        val plugins = ModsCollection(ModType.Plugin, inst.findDataFiles(),
+	var dataDirs = ArrayList<String>()
+	dataDirs.add(inst.findDataFiles())
+        val plugins = ModsCollection(ModType.Plugin, dataDirs,
             ModsDatabaseOpenHelper.getInstance(this))
         if (plugins.mods.count { it.enabled } == 0) {
             // No mods enabled, show a warning
@@ -261,10 +263,30 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        val dataFiles = GameInstaller.getDataFiles(this)
         val db = ModsDatabaseOpenHelper.getInstance(this)
-        val resources = ModsCollection(ModType.Resource, dataFiles, db)
-        val plugins = ModsCollection(ModType.Plugin, dataFiles, db)
+
+	var dataFilesList = ArrayList<String>()
+        dataFilesList.add(GameInstaller.getDataFiles(this))
+	val dataDirsPath = ArrayList<String>()
+	dataDirsPath.add(GameInstaller.getDataFiles(this) + "/../")
+
+        // Get list of enabled data directories
+        var enabledDataDirs = ArrayList<String>()
+        enabledDataDirs.add(GameInstaller.getDataFiles(this))
+        val availableDirs = ModsCollection(ModType.Dir, dataDirsPath, db)
+
+        availableDirs.mods
+            .filter { it.enabled }
+            .forEach { enabledDataDirs.add(it.filename) }
+
+        File(GameInstaller.getDataFiles(this) + "/../").listFiles().forEach {
+	    if (!it.isFile() && it.getName() != "Data Files" && enabledDataDirs.contains(it.getName()) )
+	        dataFilesList.add(GameInstaller.getDataFiles(this) + "/../" + it.getName())
+	}
+
+        val resources = ModsCollection(ModType.Resource, dataFilesList, db)
+        val dirs = ModsCollection(ModType.Dir, dataDirsPath, db)
+        val plugins = ModsCollection(ModType.Plugin, dataFilesList, db)
 
         try {
             // generate final output.cfg
@@ -275,6 +297,11 @@ class MainActivity : AppCompatActivity() {
                 .filter { it.enabled }
                 .forEach { output += "fallback-archive=${it.filename}\n" }
 
+            // output data dirs
+            dirs.mods
+                .filter { it.enabled }
+                .forEach { output += "data=" + '"' + GameInstaller.getDataFiles(this) + "/../" + it.filename + '"' + "\n" }
+
             // output plugins
             plugins.mods
                 .filter { it.enabled }
@@ -282,6 +309,7 @@ class MainActivity : AppCompatActivity() {
 
             // write everything to openmw.cfg
             File(Constants.OPENMW_CFG).writeText(output)
+//            File("/storage/emulated/0/omw_nightly/config/test.cfg").writeText(output)
         } catch (e: IOException) {
             Log.e(TAG, "Failed to generate openmw.cfg.", e)
         }
