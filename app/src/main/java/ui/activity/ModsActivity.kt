@@ -52,7 +52,7 @@ class ModsActivity : AppCompatActivity() {
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
 
-                // Clear plugins/resources list when moving to data tab, to update it fast later
+                // Clear plugins/resources list when moving to data tab, to update it faster later?
                 if(tab.position == 2) {
                     mPluginAdapter.notifyItemRangeRemoved(0, mPluginAdapter.collection.mods.size)
                     mResourceAdapter.notifyItemRangeRemoved(0, mResourceAdapter.collection.mods.size)
