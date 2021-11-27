@@ -83,10 +83,6 @@
             />
 
         <CheckBoxPreference
-            android:key="pref_nohighp"
-            android:title="@string/pref_nohighp"/>
-
-        <CheckBoxPreference
             android:key="pref_OSGVBO"
             android:title="@string/pref_OSGVBO"
             android:defaultValue="true"/>
