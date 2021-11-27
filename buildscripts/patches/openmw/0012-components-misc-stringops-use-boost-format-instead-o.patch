@@ -1,8 +1,16 @@
 diff --git a/components/misc/stringops.hpp b/components/misc/stringops.hpp
-index fe4be0000..39d52b5f4 100644
+index fe4be0000..b89185919 100644
 --- a/components/misc/stringops.hpp
 +++ b/components/misc/stringops.hpp
-@@ -167,13 +167,14 @@ public:
+@@ -7,6 +7,7 @@
+ #include <string_view>
+ #include <iterator>
+ #include <functional>
++#include <boost/format.hpp>
+ 
+ namespace Misc
+ {
+@@ -167,13 +168,14 @@ public:
      template <typename ... Args>
      static std::string format(const char* fmt, Args const & ... args)
      {
