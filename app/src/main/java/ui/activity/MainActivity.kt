@@ -174,7 +174,7 @@ class MainActivity : AppCompatActivity() {
                 .show()
             return
         }
-
+/**
         // Second, check if user has at least one mod enabled
 	var dataDirs = ArrayList<String>()
 	dataDirs.add(inst.findDataFiles())
@@ -196,7 +196,7 @@ class MainActivity : AppCompatActivity() {
 
             return
         }
-
+*/
         // If everything's alright, start the game
         startGame()
     }
@@ -280,7 +280,7 @@ class MainActivity : AppCompatActivity() {
             .forEach { enabledDataDirs.add(it.filename) }
 
         File(GameInstaller.getDataFiles(this) + "/../").listFiles().forEach {
-	    if (!it.isFile() && it.getName() != "Data Files" && enabledDataDirs.contains(it.getName()) )
+	    if (!it.isFile() && it.getName() != "Data Files" /*&& enabledDataDirs.contains(it.getName())*/ )
 	        dataFilesList.add(GameInstaller.getDataFiles(this) + "/../" + it.getName())
 	}
 
@@ -309,7 +309,7 @@ class MainActivity : AppCompatActivity() {
 
             // write everything to openmw.cfg
             File(Constants.OPENMW_CFG).writeText(output)
-//            File("/storage/emulated/0/omw_nightly/config/test.cfg").writeText(output)
+            File("/storage/emulated/0/omw_nightly/config/test.cfg").writeText(output)
         } catch (e: IOException) {
             Log.e(TAG, "Failed to generate openmw.cfg.", e)
         }

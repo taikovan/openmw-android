@@ -52,7 +52,7 @@ class ModsActivity : AppCompatActivity() {
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
 
-                // Clear plugins/resources list when moving to data tab, to update it faster later?
+                // Clear plugins/resources list when moving to data tab, to update it fast later
                 if(tab.position == 2) {
                     mPluginAdapter.notifyItemRangeRemoved(0, mPluginAdapter.collection.mods.size)
                     mResourceAdapter.notifyItemRangeRemoved(0, mResourceAdapter.collection.mods.size)
@@ -77,6 +77,11 @@ class ModsActivity : AppCompatActivity() {
         setupModList(findViewById(R.id.list_resources), ModType.Resource)
         setupModList(findViewById(R.id.list_dirs), ModType.Dir)
 
+        updateModList()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
         updateModList()
     }
 
@@ -116,8 +121,14 @@ class ModsActivity : AppCompatActivity() {
 
 	if (type == ModType.Dir) 
             dataFilesList.add(GameInstaller.getDataFiles(this) + "/../")
-	else 
+	else {
 	    dataFilesList.add(GameInstaller.getDataFiles(this))
+
+	    File(GameInstaller.getDataFiles(this) + "/../").listFiles().forEach {
+	        if (!it.isFile() /**&& it.getName() != "Data Files" && enabledDataDirs.contains(it.getName())*/ )
+	            dataFilesList.add(GameInstaller.getDataFiles(this) + "/../" + it.getName())
+	    }
+        }
 
         val linearLayoutManager = LinearLayoutManager(this)
         linearLayoutManager.orientation = RecyclerView.VERTICAL
