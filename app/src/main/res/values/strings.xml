@@ -45,6 +45,7 @@
     <string name="pref_graphics">Graphics</string>
     <string name="pref_commandLine">Custom command line arguments</string>
     <string name="pref_envLine">Custom environment flags</string>
+    <string name="pref_nohighp">Medium shader precision</string>
     <string name="pref_ui">User interface</string>
     <string name="pref_textureShrinking">Texture shrinking</string>
     <string name="pref_textureShrinking_default">none</string>
