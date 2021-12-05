@@ -52,29 +52,13 @@ class ModsActivity : AppCompatActivity() {
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
 
-                    //This crashing app :(
-                if(tab.position == 2) {
-/**
-                    var counter = 0
-                    repeat(mPluginAdapter.collection.mods.size) {
-                        mPluginAdapter.notifyItemChanged(counter)
-                        counter = counter + 1
-                    }
-                    counter = 0
-                    repeat(mResourceAdapter.collection.mods.size) {
-                        mResourceAdapter.notifyItemChanged(counter)
-                        counter = counter + 1
-                    }
-*/
-                    // And this sux :(
-                    mPluginAdapter.notifyItemRangeRemoved(0, mPluginAdapter.collection.mods.size)
-                    mResourceAdapter.notifyItemRangeRemoved(0, mResourceAdapter.collection.mods.size)
-                }
-
-                //Reload mod list when moving from data dir tab.... shouldnt it be swaped? it just works :D
-                if(flipper.displayedChild == 2)
+                // Reload mod list when moving from data dir tab
+                if(flipper.displayedChild == 2) {
                     updateModList()
-
+                    mPluginAdapter.notifyDataSetChanged()
+                    mResourceAdapter.notifyDataSetChanged()
+                }
+		
                 flipper.displayedChild = tab.position
             }
 
