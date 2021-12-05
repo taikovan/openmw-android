@@ -67,8 +67,8 @@ class ModsActivity : AppCompatActivity() {
                     }
 */
                     // And this sux :(
-                    mPluginAdapter.notifyItemRemoved(0, mPluginAdapter.collection.mods.size)
-                    mResourceAdapter.notifyItemRemoved(0, mResourceAdapter.collection.mods.size)
+                    mPluginAdapter.notifyItemRangeRemoved(0, mPluginAdapter.collection.mods.size)
+                    mResourceAdapter.notifyItemRangeRemoved(0, mResourceAdapter.collection.mods.size)
                 }
 
                 //Reload mod list when moving from data dir tab.... shouldnt it be swaped? it just works :D
