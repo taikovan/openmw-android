@@ -266,22 +266,13 @@ class MainActivity : AppCompatActivity() {
         val db = ModsDatabaseOpenHelper.getInstance(this)
 
 	var dataFilesList = ArrayList<String>()
-        dataFilesList.add(GameInstaller.getDataFiles(this))
-	val dataDirsPath = ArrayList<String>()
-	dataDirsPath.add(GameInstaller.getDataFiles(this) + "/../")
+	var dataDirsPath = ArrayList<String>()
+	dataFilesList.add(GameInstaller.getDataFiles(this))
+        dataDirsPath.add(GameInstaller.getDataFiles(this).dropLast(10))
 
-        // Get list of enabled data directories
-        var enabledDataDirs = ArrayList<String>()
-        enabledDataDirs.add(GameInstaller.getDataFiles(this))
-        val availableDirs = ModsCollection(ModType.Dir, dataDirsPath, db)
-
-        availableDirs.mods
-            .filter { it.enabled }
-            .forEach { enabledDataDirs.add(it.filename) }
-
-        File(GameInstaller.getDataFiles(this) + "/../").listFiles().forEach {
-	    if (!it.isFile() && it.getName() != "Data Files" /*&& enabledDataDirs.contains(it.getName())*/ )
-	        dataFilesList.add(GameInstaller.getDataFiles(this) + "/../" + it.getName())
+	File(GameInstaller.getDataFiles(this).dropLast(10)).listFiles().forEach {
+	    if (!it.isFile())
+	        dataFilesList.add(GameInstaller.getDataFiles(this).dropLast(10) + it.getName())
 	}
 
         val resources = ModsCollection(ModType.Resource, dataFilesList, db)
@@ -300,7 +291,7 @@ class MainActivity : AppCompatActivity() {
             // output data dirs
             dirs.mods
                 .filter { it.enabled }
-                .forEach { output += "data=" + '"' + GameInstaller.getDataFiles(this) + "/../" + it.filename + '"' + "\n" }
+                .forEach { output += "data=" + '"' + GameInstaller.getDataFiles(this).dropLast(10) + it.filename + '"' + "\n" }
 
             // output plugins
             plugins.mods

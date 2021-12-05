@@ -52,13 +52,21 @@ class ModsActivity : AppCompatActivity() {
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
 
-                // Clear plugins/resources list when moving to data tab, to update it fast later
+                // Reload old plugins/resources list when moving to data tab
                 if(tab.position == 2) {
-                    mPluginAdapter.notifyItemRangeRemoved(0, mPluginAdapter.collection.mods.size)
-                    mResourceAdapter.notifyItemRangeRemoved(0, mResourceAdapter.collection.mods.size)
+                    var counter = 0
+                    repeat(mPluginAdapter.collection.mods.size) {
+                        mPluginAdapter.notifyItemChanged(counter)
+                        counter = counter + 1
+                    }
+                    counter = 0
+                    repeat(mResourceAdapter.collection.mods.size) {
+                        mResourceAdapter.notifyItemChanged(counter)
+                        counter = counter + 1
+                    }
                 }
 
-                //Reload mod list when moving from data dir tab
+                //Reload mod list when moving from data dir tab.... shouldnt it be swaped? it just works :D
                 if(flipper.displayedChild == 2)
                     updateModList()
 
@@ -94,16 +102,16 @@ class ModsActivity : AppCompatActivity() {
 	var dataDirs = ArrayList<String>()
 	var enabledDataDirs = ArrayList<String>()
 	enabledDataDirs.add(GameInstaller.getDataFiles(this))
-	dataDirs.add(GameInstaller.getDataFiles(this) + "/../")
+	dataDirs.add(GameInstaller.getDataFiles(this).dropLast(10))
 	val availableDirs = ModsCollection(ModType.Dir, dataDirs, database)
 
 	availableDirs.mods
 	    .filter { it.enabled }
             .forEach { enabledDataDirs.add(it.filename) }
 
-	File(GameInstaller.getDataFiles(this) + "/../").listFiles().forEach {
-	    if (!it.isFile() /**&& it.getName() != "Data Files"*/ && enabledDataDirs.contains(it.getName()) )
-	        dataFilesList.add(GameInstaller.getDataFiles(this) + "/../" + it.getName())
+	File(GameInstaller.getDataFiles(this).dropLast(10)).listFiles().forEach {
+	    if (!it.isFile() && enabledDataDirs.contains(it.getName()) )
+	        dataFilesList.add(GameInstaller.getDataFiles(this).dropLast(10) + it.getName())
 	}
 
         mPluginAdapter.collection = ModsCollection(ModType.Plugin, dataFilesList, database)
@@ -117,16 +125,17 @@ class ModsActivity : AppCompatActivity() {
      */
     private fun setupModList(list: RecyclerView, type: ModType) {
 
+        // This is here just to auto-enable basic plugins (morrowind.esp...) it somehow dont work in updateModList :( 
 	var dataFilesList = ArrayList<String>()
 
 	if (type == ModType.Dir) 
-            dataFilesList.add(GameInstaller.getDataFiles(this) + "/../")
+            dataFilesList.add(GameInstaller.getDataFiles(this).dropLast(10))
 	else {
 	    dataFilesList.add(GameInstaller.getDataFiles(this))
 
-	    File(GameInstaller.getDataFiles(this) + "/../").listFiles().forEach {
-	        if (!it.isFile() /**&& it.getName() != "Data Files" && enabledDataDirs.contains(it.getName())*/ )
-	            dataFilesList.add(GameInstaller.getDataFiles(this) + "/../" + it.getName())
+	    File(GameInstaller.getDataFiles(this).dropLast(10)).listFiles().forEach {
+	        if (!it.isFile())
+	            dataFilesList.add(GameInstaller.getDataFiles(this).dropLast(10) + it.getName())
 	    }
         }
 
@@ -158,7 +167,6 @@ class ModsActivity : AppCompatActivity() {
             mDirAdapter.touchHelper = touchHelper
             list.adapter = mDirAdapter
         }
-
     }
 
     /**
