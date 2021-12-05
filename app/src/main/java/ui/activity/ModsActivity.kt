@@ -53,6 +53,7 @@ class ModsActivity : AppCompatActivity() {
             override fun onTabSelected(tab: TabLayout.Tab) {
 
                     //This crashing app :(
+                if(tab.position == 2) {
 /**
                     var counter = 0
                     repeat(mPluginAdapter.collection.mods.size) {
