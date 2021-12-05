@@ -52,8 +52,8 @@ class ModsActivity : AppCompatActivity() {
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
 
-                // Reload old plugins/resources list when moving to data tab
-                if(tab.position == 2) {
+                    //This crashing app :(
+/**
                     var counter = 0
                     repeat(mPluginAdapter.collection.mods.size) {
                         mPluginAdapter.notifyItemChanged(counter)
@@ -64,6 +64,10 @@ class ModsActivity : AppCompatActivity() {
                         mResourceAdapter.notifyItemChanged(counter)
                         counter = counter + 1
                     }
+*/
+                    // And this sux :(
+                    mPluginAdapter.notifyItemRemoved(0, PluginAdapter.collection.mods.size)
+                    mResourceAdapter.notifyItemRemoved(0, mResourceAdapter.collection.mods.size)
                 }
 
                 //Reload mod list when moving from data dir tab.... shouldnt it be swaped? it just works :D
