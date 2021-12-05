@@ -67,7 +67,7 @@ class ModsActivity : AppCompatActivity() {
                     }
 */
                     // And this sux :(
-                    mPluginAdapter.notifyItemRemoved(0, PluginAdapter.collection.mods.size)
+                    mPluginAdapter.notifyItemRemoved(0, mPluginAdapter.collection.mods.size)
                     mResourceAdapter.notifyItemRemoved(0, mResourceAdapter.collection.mods.size)
                 }
 
