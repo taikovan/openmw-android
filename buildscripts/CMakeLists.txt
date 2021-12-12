@@ -335,7 +335,9 @@ ExternalProject_Add(gl4es
 
 	INSTALL_COMMAND mkdir -p ${prefix}/lib/
 	COMMAND cp libs/${app_abi}/libGL.so ${prefix}/lib/
+	COMMAND cp -r <SOURCE_DIR>/include ${prefix}/include/gl4es/
 	COMMAND cp -r <SOURCE_DIR>/include ${prefix}/
+
 )
 
 ExternalProject_Add(mygui
@@ -548,6 +550,10 @@ set(OPENMW_COMMON
  	-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON
  	-DCMAKE_POLICY_DEFAULT_CMP0069=NEW
 	-DOPENMW_LTO_BUILD=1
+	-DOPENGL_opengl_LIBRARY=${prefix}/lib/libGL.so
+	-DOPENGL_glx_LIBRARY=${prefix}/lib/libGL.so
+	-DOPENGL_INCLUDE_DIR=${prefix}/include/gl4es/
+	-DOPENMW_GL4ES_MANUAL_INIT=ON
 	-DOPENAL_INCLUDE_DIR=${prefix}/include/AL/
 	-DBullet_INCLUDE_DIR=${prefix}/include/bullet/
 	-DOPENGL_ES=OFF
