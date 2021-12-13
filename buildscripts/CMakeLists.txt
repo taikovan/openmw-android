@@ -574,7 +574,7 @@ set(OPENMW_PATCH
 )
 
 ExternalProject_Add(openmw
-	DEPENDS boost openal osg mygui ffmpeg sdl2 bullet lz4 luajit
+	DEPENDS boost openal gl4es osg mygui ffmpeg sdl2 bullet lz4 luajit
 
 	URL https://github.com/sisah2/openmw/archive/${OPENMW_VERSION}.tar.gz
 #	URL_HASH ${OPENMW_HASH}
