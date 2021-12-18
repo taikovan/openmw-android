@@ -16,6 +16,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="actionBarStyle">@style/MyActionBar</item>
+        <item name="android:statusBarColor">@color/statusBarColor</item>
     </style>
 
     <style name="MyCustomTextAppearance" parent="TextAppearance.Design.Tab">

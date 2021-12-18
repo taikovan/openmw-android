@@ -145,7 +145,7 @@
     <string name="action_about">About</string>
     <string name="about_title">About OMW</string>
 
-    <string name="action_theme">Themes</string>
+    <string name="action_theme">Theme</string>
     <string name="action_theme_system">System</string>
     <string name="action_theme_auto">Automatic</string>
     <string name="action_theme_light">Light</string>
