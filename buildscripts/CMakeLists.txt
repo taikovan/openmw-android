@@ -335,6 +335,7 @@ ExternalProject_Add(gl4es
 
 	INSTALL_COMMAND mkdir -p ${prefix}/lib/
 	COMMAND cp libs/${app_abi}/libGL.so ${prefix}/lib/
+	COMMAND cp -r <SOURCE_DIR>/include ${prefix}/include/gl4es/
 	COMMAND cp -r <SOURCE_DIR>/include ${prefix}/
 )
 
@@ -545,6 +546,13 @@ set(OPENMW_COMMON
 	-DOPENMW_USE_SYSTEM_SQLITE3=OFF
 	-DBUILD_WIZARD=0
 	-DBUILD_MYGUI_PLUGIN=0
+ 	-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON
+ 	-DCMAKE_POLICY_DEFAULT_CMP0069=NEW
+	-DOPENMW_LTO_BUILD=1
+	-DOPENGL_opengl_LIBRARY=${prefix}/lib/libGL.so
+	-DOPENGL_glx_LIBRARY=${prefix}/lib/libGL.so
+	-DOPENGL_INCLUDE_DIR=${prefix}/include/gl4es/
+	-DOPENMW_GL4ES_MANUAL_INIT=ON
 	-DOPENAL_INCLUDE_DIR=${prefix}/include/AL/
 	-DBullet_INCLUDE_DIR=${prefix}/include/bullet/
 	-DOPENGL_ES=OFF
@@ -566,7 +574,7 @@ set(OPENMW_PATCH
 )
 
 ExternalProject_Add(openmw
-	DEPENDS boost openal osg mygui ffmpeg sdl2 bullet lz4 luajit
+	DEPENDS boost openal gl4es osg mygui ffmpeg sdl2 bullet lz4 luajit
 
 	URL https://github.com/sisah2/openmw/archive/${OPENMW_VERSION}.tar.gz
 #	URL_HASH ${OPENMW_HASH}
