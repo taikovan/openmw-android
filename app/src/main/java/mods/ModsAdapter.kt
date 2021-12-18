@@ -105,11 +105,11 @@ class ModsAdapter() : RecyclerView.Adapter<ModsAdapter.ModViewHolder>() {
     }
 
     fun onRowSelected(modViewHolder: ModViewHolder) {
-        modViewHolder.rowView.setBackgroundColor(Color.LTGRAY)
+        modViewHolder.rowView.setBackgroundResource(R.drawable.mod_item_selected_background)
     }
 
     fun onRowClear(modViewHolder: ModViewHolder) {
-        modViewHolder.rowView.setBackgroundColor(Color.TRANSPARENT)
+        modViewHolder.rowView.setBackgroundResource(R.drawable.mod_item_background)
         collection.update()
     }
 }
