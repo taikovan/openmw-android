@@ -109,7 +109,7 @@ class ModsAdapter() : RecyclerView.Adapter<ModsAdapter.ModViewHolder>() {
     }
 
     fun onRowClear(modViewHolder: ModViewHolder) {
-        modViewHolder.rowView.setBackgroundColor(Color.WHITE)
+        modViewHolder.rowView.setBackgroundColor(Color.TRANSPARENT)
         collection.update()
     }
 }
