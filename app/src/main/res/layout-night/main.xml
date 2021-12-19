@@ -38,7 +38,7 @@
                 android:layout_gravity="bottom|right"
                 android:layout_margin="16dp"
                 android:src="@android:drawable/ic_media_play"
-                app:backgroundTint="#2196F3"
+                app:backgroundTint="#555555"
                 app:rippleColor="#FFFFFF" />
         </FrameLayout>
     </LinearLayout>

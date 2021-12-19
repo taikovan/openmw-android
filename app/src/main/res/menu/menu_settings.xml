@@ -37,9 +37,6 @@
                    <item android:id="@+id/action_theme_system"
                      android:title="@string/action_theme_system"/>
 
-                   <item android:id="@+id/action_theme_auto"
-                     android:title="@string/action_theme_auto"/>
-
                    <item android:id="@+id/action_theme_light"
                      android:title="@string/action_theme_light" />
 

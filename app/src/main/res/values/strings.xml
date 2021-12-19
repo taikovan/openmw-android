@@ -147,7 +147,6 @@
 
     <string name="action_theme">Theme</string>
     <string name="action_theme_system">System</string>
-    <string name="action_theme_auto">Automatic</string>
     <string name="action_theme_light">Light</string>
     <string name="action_theme_dark">Dark</string>
 

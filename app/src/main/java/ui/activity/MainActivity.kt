@@ -75,8 +75,7 @@ class MainActivity : AppCompatActivity() {
 
         val theme = prefs.getInt(getString(R.string.theme), 0)
         if(theme == 0) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-        else if(theme == 1) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO)
-        else if(theme == 2) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        else if(theme == 1) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
 
         fragmentManager.beginTransaction()
@@ -586,21 +585,9 @@ class MainActivity : AppCompatActivity() {
                 true
             }
 
-            R.id.action_theme_auto -> {
-                with (prefs.edit()) {
-                    putInt(getString(R.string.theme), 1)
-                    apply()
-                }
-
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO)
-
-                Toast.makeText(this, "Theme set to automatic", Toast.LENGTH_SHORT).show()
-                true
-            }
-
             R.id.action_theme_light -> {
                 with (prefs.edit()) {
-                    putInt(getString(R.string.theme), 2)
+                    putInt(getString(R.string.theme), 1)
                     apply()
                 }
 
@@ -612,7 +599,7 @@ class MainActivity : AppCompatActivity() {
 
             R.id.action_theme_dark -> {
                 with (prefs.edit()) {
-                    putInt(getString(R.string.theme), 3)
+                    putInt(getString(R.string.theme), 2)
                     apply()
                 }
 
