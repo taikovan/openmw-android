@@ -34,6 +34,7 @@ import android.system.Os
 import android.util.DisplayMetrics
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -71,6 +72,11 @@ class MainActivity : AppCompatActivity() {
         PermissionHelper.getWriteExternalStoragePermission(this@MainActivity)
         setContentView(R.layout.main)
         prefs = PreferenceManager.getDefaultSharedPreferences(this)
+
+        val theme = prefs.getInt(getString(R.string.theme), 0)
+        if(theme == 0) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        else if(theme == 1) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
 
         fragmentManager.beginTransaction()
             .replace(R.id.content_frame, FragmentSettings()).commit()
@@ -540,6 +546,7 @@ class MainActivity : AppCompatActivity() {
         menu.clear()
         val inflater = menuInflater
         inflater.inflate(R.menu.menu_settings, menu)
+
         if (!MyApp.haveBugsnagApiKey)
             menu.findItem(R.id.action_bugsnag_consent).setVisible(false)
         return super.onPrepareOptionsMenu(menu)
@@ -563,6 +570,42 @@ class MainActivity : AppCompatActivity() {
                 removeStaticFiles()
                 removeResourceFiles()
                 Toast.makeText(this, getString(R.string.user_resources_was_reset), Toast.LENGTH_SHORT).show()
+                true
+            }
+
+            R.id.action_theme_system -> {
+                with (prefs.edit()) {
+                    putInt(getString(R.string.theme), 0)
+                    apply()
+                }
+
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+
+                Toast.makeText(this, "Theme set to system", Toast.LENGTH_SHORT).show()
+                true
+            }
+
+            R.id.action_theme_light -> {
+                with (prefs.edit()) {
+                    putInt(getString(R.string.theme), 1)
+                    apply()
+                }
+
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+
+                Toast.makeText(this, "Theme set to light", Toast.LENGTH_SHORT).show()
+                true
+            }
+
+            R.id.action_theme_dark -> {
+                with (prefs.edit()) {
+                    putInt(getString(R.string.theme), 2)
+                    apply()
+                }
+
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+
+                Toast.makeText(this, "Theme set to dark", Toast.LENGTH_SHORT).show()
                 true
             }
 
