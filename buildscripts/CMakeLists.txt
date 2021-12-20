@@ -344,7 +344,7 @@ ExternalProject_Add(mygui
 
 	URL https://github.com/MyGUI/mygui/archive/MyGUI${MYGUI_VERSION}.tar.gz
 	https://github.com/xyzz/openmw-deps/releases/download/v0/MyGUI${MYGUI_VERSION}.tar.gz
-	URL_HASH ${MYGUI_HASH}
+#URL_HASH ${MYGUI_HASH}
 	DOWNLOAD_DIR ${download_dir}
 
 	PATCH_COMMAND patch -d <SOURCE_DIR> -p1 -t -N < ${CMAKE_SOURCE_DIR}/patches/mygui-dont-set-debug-postfix.patch
