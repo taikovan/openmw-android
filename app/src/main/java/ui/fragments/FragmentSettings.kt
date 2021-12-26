@@ -202,6 +202,11 @@ class FragmentSettings : PreferenceFragment(), OnSharedPreferenceChangeListener 
         if(sharedPref.getString("pref_shadersDir_v2", "") == "modified" || sharedPref.getString("pref_shadersDir_v2", "") == "experimental")
 		isnohighpenabled = true
         findPreference("pref_nohighp").isEnabled = isnohighpenabled
+
+	var isAdditionalAnimSourcesEnabled = false;
+        if(sharedPref.getBoolean("gs_use_additional_animation_sources", false) == true) isAdditionalAnimSourcesEnabled = true
+        findPreference("gs_weapon_sheating").isEnabled = isAdditionalAnimSourcesEnabled
+        findPreference("gs_shield_sheating").isEnabled = isAdditionalAnimSourcesEnabled
     }
 
 }

@@ -14,6 +14,42 @@
         <item>win1252</item>
     </string-array>
 
+    <string-array name="gs_factor_strength_into_hand_to_hand_combat_entries">
+        <item>Off</item>
+        <item>Affect Werewolwes</item>
+        <item>Do Not Affect Werewolwes</item>
+    </string-array>
+
+    <string-array name="gs_factor_strength_into_hand_to_hand_combat_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string-array name="gs_default_shoulder_entries">
+        <item>Right</item>
+        <item>Left</item>
+    </string-array>
+
+    <string-array name="gs_default_shoulder_values">
+        <item>30 -10</item>
+        <item>-30 -10</item>
+    </string-array>
+
+    <string-array name="gs_show_owned_entries">
+        <item>Off</item>
+        <item>Tool Tip Only</item>
+        <item>Crosshair Only</item>
+        <item>Tool Tip and Crosshair</item>
+    </string-array>
+
+    <string-array name="gs_show_owned_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
     <string-array name="mipmapping_array">
         <item>trilinear</item>
         <item>bilinear</item>
@@ -203,4 +239,5 @@
     <string name="pref_always_show_top_bar">Always show top-bar icons</string>
 
     <string name="theme">0</string>
+
 </resources>

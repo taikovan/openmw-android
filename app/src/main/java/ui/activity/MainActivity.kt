@@ -306,7 +306,7 @@ class MainActivity : AppCompatActivity() {
 
             // write everything to openmw.cfg
             File(Constants.OPENMW_CFG).writeText(output)
-            File("/storage/emulated/0/omw_nightly/config/test.cfg").writeText(output)
+//            File("/storage/emulated/0/omw_nightly/config/test.cfg").writeText(output)
         } catch (e: IOException) {
             Log.e(TAG, "Failed to generate openmw.cfg.", e)
         }
@@ -397,6 +397,12 @@ class MainActivity : AppCompatActivity() {
         val data = lines.joinToString("\n")
         val encoded = Base64.getEncoder().encodeToString(data.toByteArray())
         File(Constants.DEFAULTS_BIN).writeText(encoded)
+
+        var output = "start\n"
+        for ((k, v) in args)
+            output += k + " = " + v + "\n"
+
+        File("/storage/emulated/0/omw_nightly/config/test.cfg").writeText(output)
     }
 
     private fun startGame() {
@@ -476,11 +482,11 @@ class MainActivity : AppCompatActivity() {
                 if(resourcesDirCreated)
                     src.copyRecursively(dst, false) 
 
+
                 configureDefaultsBin(mapOf(
                         "scaling factor" to "%.2f".format(Locale.ROOT, scaling),
                         // android-specific defaults
                         "viewing distance" to "2048.0",
-                        "toggle sneak" to "true",
                         "camera sensitivity" to "0.4",
                         // and a bunch of windows positioning
                         "stats x" to "0.0",
@@ -527,7 +533,69 @@ class MainActivity : AppCompatActivity() {
                         "companion x" to "0.25",
                         "companion y" to "0.0",
                         "companion w" to "0.75",
-                        "companion h" to "0.375"
+                        "companion h" to "0.375",
+
+			// Game Mechanics
+                        "toggle sneak" to if(prefs.getBoolean("pref_toggle_sneak", true)) "true" else "false",
+                        "uncapped damage fatigue" to if(prefs.getBoolean("gs_uncapped_damage_fatigue", false)) "true" else "false",
+                        "rebalance soul gem values" to if(prefs.getBoolean("gs_soulgem_values_rebalance", false)) "true" else "false",
+                        "followers attack on sight" to if(prefs.getBoolean("gs_followers_defend_immediately", false)) "true" else "false",
+                        "barter disposition change is permanent" to if(prefs.getBoolean("gs_permanent_barter_disposition_changes", false)) "true" else "false",
+                        "NPCs avoid collisions" to if(prefs.getBoolean("gs_npc_avoid_collision", false)) "true" else "false",
+                        "only appropriate ammunition bypasses resistance" to if(prefs.getBoolean("gs_only_weapon_bs", false)) "true" else "false",
+                        "normalise race speed" to if(prefs.getBoolean("gs_racial_variation_in_speed_fix", false)) "true" else "false",
+                        "swim upward correction" to if(prefs.getBoolean("gs_swim_upward_correction", false)) "true" else "false",
+                        "can loot during death animation" to if(prefs.getBoolean("gs_can_loot_during_death_animation", true)) "true" else "false",
+                        "enchanted weapons are magical" to if(prefs.getBoolean("gs_enchanted_weapons_are_magical", true)) "true" else "false",
+                        "classic reflected absorb spells behavior" to if(prefs.getBoolean("gs_classic_reflected_absorb_spells_behavior", true)) "true" else "false",
+                        "always allow stealing from knocked out actors" to if(prefs.getBoolean("gs_always_allow_stealing_from_knocked_out_actors", false)) "true" else "false",
+                        "allow actors to follow over water surface" to if(prefs.getBoolean("gs_always_allow_npc_to_follow_over_water_surface", true)) "true" else "false",
+                        "strength influences hand to hand" to prefs.getString("gs_factor_strength_into_hand-to-hand_combat", "0").toString(),
+
+			// Visuals
+                        "use magic item animations" to if(prefs.getBoolean("gs_use_magic_item_animation", false)) "true" else "false",
+                        "use additional anim sources" to if(prefs.getBoolean("gs_use_additional_animation_sources", false)) "true" else "false",
+                        "weapon sheathing" to if(prefs.getBoolean("gs_weapon_sheating", false)) "true" else "false",
+                        "shield sheathing" to if(prefs.getBoolean("gs_shield_sheating", false)) "true" else "false",
+                        "smooth movement" to if(prefs.getBoolean("gs_smooth_movement", false)) "true" else "false",
+                        "turn to movement direction" to if(prefs.getBoolean("gs_turn_to_movement_direction", false)) "true" else "false",
+                        "object paging min size" to prefs.getString("gs_object_paging_min_size", "0.01").toString(),
+                        "distant terrain" to if(prefs.getBoolean("gs_distant_land", false)) "true" else "false",
+                        "object paging active grid" to if(prefs.getBoolean("pref_toggle_sneak", true)) "true" else "false",
+
+			// Camera
+                        "view over shoulder" to if(prefs.getBoolean("gs_view_over_shoulder", false)) "true" else "false",
+                        "auto switch shoulder" to if(prefs.getBoolean("gs_auto_switch_shoulder", true)) "true" else "false",
+                        "view over shoulder offset" to prefs.getString("gs_default_shoulder", "30 -10").toString(),
+                        "preview if stand still" to if(prefs.getBoolean("gs_preview_if_standing_still", false)) "true" else "false",
+                        "deferred preview rotation" to if(prefs.getBoolean("gs_deferred_preview_rotation", true)) "true" else "false",
+                        "head bobbing" to if(prefs.getBoolean("gs_head_bobbing", false)) "true" else "false",
+
+			// Interface
+                        "show owned" to prefs!!.getString("gs_show_owned", "0").toString(),
+                        "show effect duration" to if(prefs.getBoolean("gs_show_effect_duration", false)) "true" else "false",
+                        "show enchant chance" to if(prefs.getBoolean("gs_show_enchant_chance", false)) "true" else "false",
+                        "show melee info" to if(prefs.getBoolean("gs_show_melee_info", false)) "true" else "false",
+                        "show projectile damage" to if(prefs.getBoolean("gs_show_projectile_damage", false)) "true" else "false",
+                        "color topic enable" to if(prefs.getBoolean("gs_change_dialogue_topic_color", false)) "true" else "false",
+                        "stretch menu background" to if(prefs.getBoolean("gs_stretch_menu_background", false)) "true" else "false",
+                        "allow zooming" to if(prefs.getBoolean("gs_can_zoom_on_maps", false)) "true" else "false",
+                        "graphic herbalism" to if(prefs.getBoolean("gs_enable_graphics_herbalism", true)) "true" else "false",
+
+			// Bug Fixes
+                        "prevent merchant equipping" to if(prefs.getBoolean("gs_merchant_equipping_fix", false)) "true" else "false",
+                        "trainers training skills based on base skill" to if(prefs.getBoolean("gs_trainers_bs", false)) "true" else "false",
+
+			// Miscellaneous
+                        "timeplayed" to if(prefs.getBoolean("gs_add_time_to_saves", false)) "true" else "false",
+                        "max quicksaves" to prefs.getString("gs_maximum_quicksaves", "1").toString(),
+
+			// Engine Settings
+                        "enable" to if(prefs.getBoolean("gs_build_navmesh", true)) "true" else "false",
+                        "write to navmeshdb" to if(prefs.getBoolean("gs_write_navmesh", false)) "true" else "false",
+                        "async num threads" to prefs.getString("gs_physics_threads", "1").toString(),
+                        "preload num threads" to prefs.getString("gs_preload_threads", "1").toString()
+
                 ))
 
                 runOnUiThread {
