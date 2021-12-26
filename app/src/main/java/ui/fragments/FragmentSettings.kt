@@ -41,6 +41,7 @@ import file.GameInstaller
 import ui.activity.ConfigureControls
 import ui.activity.MainActivity
 import ui.activity.ModsActivity
+import ui.activity.SettingsActivity
 import utils.MyApp
 import java.util.*
 
@@ -59,7 +60,13 @@ class FragmentSettings : PreferenceFragment(), OnSharedPreferenceChangeListener 
             this.startActivity(intent)
             true
         }
-
+/*
+        findPreference("game_test").setOnPreferenceClickListener {
+            val intent = Intent(activity, SettingsActivity::class.java)
+            this.startActivity(intent)
+            true
+        }
+*/
         findPreference("pref_mods").setOnPreferenceClickListener {
             // Just prevent crash here if data files are not selected
             val sharedPref = preferenceScreen.sharedPreferences
@@ -202,11 +209,12 @@ class FragmentSettings : PreferenceFragment(), OnSharedPreferenceChangeListener 
         if(sharedPref.getString("pref_shadersDir_v2", "") == "modified" || sharedPref.getString("pref_shadersDir_v2", "") == "experimental")
 		isnohighpenabled = true
         findPreference("pref_nohighp").isEnabled = isnohighpenabled
-
+/*
 	var isAdditionalAnimSourcesEnabled = false;
         if(sharedPref.getBoolean("gs_use_additional_animation_sources", false) == true) isAdditionalAnimSourcesEnabled = true
         findPreference("gs_weapon_sheating").isEnabled = isAdditionalAnimSourcesEnabled
         findPreference("gs_shield_sheating").isEnabled = isAdditionalAnimSourcesEnabled
+*/
     }
 
 }
