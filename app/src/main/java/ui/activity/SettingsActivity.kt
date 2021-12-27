@@ -41,7 +41,7 @@ import android.preference.Preference
 import android.preference.PreferenceFragment
 import android.preference.PreferenceGroup
 
-class FragmentGameSettings : PreferenceFragment(), OnSharedPreferenceChangeListener {
+class FragmentGameSettings : PreferenceFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -100,19 +100,7 @@ class FragmentGameSettings : PreferenceFragment(), OnSharedPreferenceChangeListe
             this.startActivity(intent)
             true
         }
-
-       preferenceScreen.sharedPreferences.registerOnSharedPreferenceChangeListener(this)
     }
-
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
-        updatePreference(findPreference(key), key)
-    }
-
-    private fun updatePreference(preference: Preference?, key: String) {
-        if (preference == null)
-            return
-    }
-
 }
 
 class SettingsActivity : AppCompatActivity() {
@@ -159,17 +147,43 @@ class SettingsActivity : AppCompatActivity() {
     }
 }
 
-
-
 class FragmentGameSettingsPage(val res: Int) : PreferenceFragment(), OnSharedPreferenceChangeListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         addPreferencesFromResource(res)
         preferenceScreen.sharedPreferences.registerOnSharedPreferenceChangeListener(this)
+
+        if (res == R.xml.gs_visuals) updatePreference(preferenceScreen.sharedPreferences, "gs_use_additional_animation_sources")
+        if (res == R.xml.gs_camera) updatePreference(preferenceScreen.sharedPreferences, "gs_view_over_shoulder")
+        if (res == R.xml.gs_engine) updatePreference(preferenceScreen.sharedPreferences, "gs_build_navmesh")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        preferenceScreen.sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
+        updatePreference(sharedPreferences, key)
+    }
+
+    private fun updatePreference(sharedPreferences: SharedPreferences, key: String) {
+
+        if(key == "gs_use_additional_animation_sources") {
+            findPreference("gs_weapon_sheating").isEnabled = sharedPreferences.getBoolean("gs_use_additional_animation_sources", false)
+            findPreference("gs_shield_sheating").isEnabled = sharedPreferences.getBoolean("gs_use_additional_animation_sources", false)
+        }
+
+        if(key == "gs_view_over_shoulder") {
+            findPreference("gs_auto_switch_shoulder").isEnabled = sharedPreferences.getBoolean("gs_view_over_shoulder", false)
+            findPreference("gs_default_shoulder").isEnabled = sharedPreferences.getBoolean("gs_view_over_shoulder", false)
+        }
+
+        if(key == "gs_build_navmesh") {
+            findPreference("gs_write_navmesh").isEnabled = sharedPreferences.getBoolean("gs_build_navmesh", false)
+            findPreference("gs_navmesh_threads").isEnabled = sharedPreferences.getBoolean("gs_build_navmesh", false)
+        }
     }
 }
 

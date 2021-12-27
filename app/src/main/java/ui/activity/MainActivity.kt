@@ -536,7 +536,7 @@ class MainActivity : AppCompatActivity() {
                         "companion h" to "0.375",
 
 			// Game Mechanics
-                        "toggle sneak" to if(prefs.getBoolean("pref_toggle_sneak", true)) "true" else "false",
+                        "toggle sneak" to if(prefs.getBoolean("gs_toggle_sneak", true)) "true" else "false",
                         "uncapped damage fatigue" to if(prefs.getBoolean("gs_uncapped_damage_fatigue", false)) "true" else "false",
                         "rebalance soul gem values" to if(prefs.getBoolean("gs_soulgem_values_rebalance", false)) "true" else "false",
                         "followers attack on sight" to if(prefs.getBoolean("gs_followers_defend_immediately", false)) "true" else "false",
@@ -552,16 +552,27 @@ class MainActivity : AppCompatActivity() {
                         "allow actors to follow over water surface" to if(prefs.getBoolean("gs_always_allow_npc_to_follow_over_water_surface", true)) "true" else "false",
                         "strength influences hand to hand" to prefs.getString("gs_factor_strength_into_hand-to-hand_combat", "0").toString(),
 
-			// Visuals
+			// Visuals animations
                         "use magic item animations" to if(prefs.getBoolean("gs_use_magic_item_animation", false)) "true" else "false",
                         "use additional anim sources" to if(prefs.getBoolean("gs_use_additional_animation_sources", false)) "true" else "false",
                         "weapon sheathing" to if(prefs.getBoolean("gs_weapon_sheating", false)) "true" else "false",
                         "shield sheathing" to if(prefs.getBoolean("gs_shield_sheating", false)) "true" else "false",
                         "smooth movement" to if(prefs.getBoolean("gs_smooth_movement", false)) "true" else "false",
                         "turn to movement direction" to if(prefs.getBoolean("gs_turn_to_movement_direction", false)) "true" else "false",
+
+			// Visuals shaders
+                        "auto use object normal maps" to if(prefs.getBoolean("gs_auto_use_object_normal_maps", false)) "true" else "false",
+                        "auto use object specular maps" to if(prefs.getBoolean("gs_auto_use_object_specular_maps", false)) "true" else "false",
+                        "auto use terrain normal maps" to if(prefs.getBoolean("gs_auto_use_terrain_normal_maps", false)) "true" else "false",
+                        "auto use terrain specular maps" to if(prefs.getBoolean("gs_auto_use_terrain_specular_maps", false)) "true" else "false",
+                        "apply lighting to environment maps" to if(prefs.getBoolean("gs_bump_map_local_lighting", false)) "true" else "false",
+                        "radial fog" to if(prefs.getBoolean("gs_radial_fog", false)) "true" else "false",
+                        "soft particles" to if(prefs.getBoolean("gs_soft_particles", false)) "true" else "false",
+
+			// Visuals terrain
                         "object paging min size" to prefs.getString("gs_object_paging_min_size", "0.01").toString(),
                         "distant terrain" to if(prefs.getBoolean("gs_distant_land", false)) "true" else "false",
-                        "object paging active grid" to if(prefs.getBoolean("pref_toggle_sneak", true)) "true" else "false",
+                        "object paging active grid" to if(prefs.getBoolean("gs_active_grid_object_paging", true)) "true" else "false",
 
 			// Camera
                         "view over shoulder" to if(prefs.getBoolean("gs_view_over_shoulder", false)) "true" else "false",
@@ -593,6 +604,7 @@ class MainActivity : AppCompatActivity() {
 			// Engine Settings
                         "enable" to if(prefs.getBoolean("gs_build_navmesh", true)) "true" else "false",
                         "write to navmeshdb" to if(prefs.getBoolean("gs_write_navmesh", false)) "true" else "false",
+                        "async nav mesh updater threads" to prefs.getString("gs_navmesh_threads", "1").toString(),
                         "async num threads" to prefs.getString("gs_physics_threads", "1").toString(),
                         "preload num threads" to prefs.getString("gs_preload_threads", "1").toString()
 
