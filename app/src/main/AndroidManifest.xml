@@ -45,7 +45,7 @@
             android:exported="true"
             android:label="@string/activity_mods"
             />
-<!--
+
         <activity
             android:name="ui.activity.SettingsActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -62,7 +62,6 @@
             android:exported="true"
             android:label="@string/game_mechanics_activity_settings"
             />
-
         <activity
             android:name="ui.activity.Visuals_SettingsActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -111,7 +110,7 @@
             android:exported="true"
             android:label="@string/engine_activity_settings"
             />
--->
+
     </application>
 
 </manifest>

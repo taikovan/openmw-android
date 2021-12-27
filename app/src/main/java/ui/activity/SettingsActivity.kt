@@ -64,43 +64,43 @@ class FragmentGameSettings : PreferenceFragment(), OnSharedPreferenceChangeListe
             this.startActivity(intent)
             true
         }
-/*
+
         findPreference("game_settings_visuals").setOnPreferenceClickListener {
-            val intent = Intent(activity, SettingsActivity::class.java)
+            val intent = Intent(activity, Visuals_SettingsActivity::class.java)
             this.startActivity(intent)
             true
         }
 
         findPreference("game_settings_camera").setOnPreferenceClickListener {
-            val intent = Intent(activity, SettingsActivity::class.java)
+            val intent = Intent(activity, Camera_SettingsActivity::class.java)
             this.startActivity(intent)
             true
         }
 
         findPreference("game_settings_interface").setOnPreferenceClickListener {
-            val intent = Intent(activity, SettingsActivity::class.java)
+            val intent = Intent(activity, Interface_SettingsActivity::class.java)
             this.startActivity(intent)
             true
         }
 
         findPreference("game_settings_bug_fixes").setOnPreferenceClickListener {
-            val intent = Intent(activity, SettingsActivity::class.java)
+            val intent = Intent(activity, Bug_Fixes_SettingsActivity::class.java)
             this.startActivity(intent)
             true
         }
 
         findPreference("game_settings_miscellaneous").setOnPreferenceClickListener {
-            val intent = Intent(activity, SettingsActivity::class.java)
+            val intent = Intent(activity, Miscellaneous_SettingsActivity::class.java)
             this.startActivity(intent)
             true
         }
 
         findPreference("game_settings_engine").setOnPreferenceClickListener {
-            val intent = Intent(activity, SettingsActivity::class.java)
+            val intent = Intent(activity, Engine_SettingsActivity::class.java)
             this.startActivity(intent)
             true
         }
-*/
+
        preferenceScreen.sharedPreferences.registerOnSharedPreferenceChangeListener(this)
     }
 
@@ -195,3 +195,142 @@ class Game_Mechanics_SettingsActivity : AppCompatActivity() {
         }
     }
 }
+
+class Visuals_SettingsActivity : AppCompatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_settings)
+
+        setSupportActionBar(findViewById(R.id.settings_toolbar))
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        fragmentManager.beginTransaction().replace(R.id.settings_frame, FragmentGameSettingsPage(R.xml.gs_visuals)).commit()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+}
+
+class Camera_SettingsActivity : AppCompatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_settings)
+
+        setSupportActionBar(findViewById(R.id.settings_toolbar))
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        fragmentManager.beginTransaction().replace(R.id.settings_frame, FragmentGameSettingsPage(R.xml.gs_camera)).commit()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+}
+
+class Interface_SettingsActivity : AppCompatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_settings)
+
+        setSupportActionBar(findViewById(R.id.settings_toolbar))
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        fragmentManager.beginTransaction().replace(R.id.settings_frame, FragmentGameSettingsPage(R.xml.gs_interface)).commit()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+}
+
+class Bug_Fixes_SettingsActivity : AppCompatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_settings)
+
+        setSupportActionBar(findViewById(R.id.settings_toolbar))
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        fragmentManager.beginTransaction().replace(R.id.settings_frame, FragmentGameSettingsPage(R.xml.gs_bug_fixes)).commit()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+}
+
+class Miscellaneous_SettingsActivity : AppCompatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_settings)
+
+        setSupportActionBar(findViewById(R.id.settings_toolbar))
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        fragmentManager.beginTransaction().replace(R.id.settings_frame, FragmentGameSettingsPage(R.xml.gs_miscellaneous)).commit()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+}
+
+class Engine_SettingsActivity : AppCompatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_settings)
+
+        setSupportActionBar(findViewById(R.id.settings_toolbar))
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        fragmentManager.beginTransaction().replace(R.id.settings_frame, FragmentGameSettingsPage(R.xml.gs_engine)).commit()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+}
+

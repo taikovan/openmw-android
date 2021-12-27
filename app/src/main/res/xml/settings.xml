@@ -20,8 +20,8 @@
             />
 
         <Preference
-            android:key="game_test"
-            android:title="test"
+            android:key="pref_game_settings"
+            android:title="Game Settings"
             />
 
         <Preference
