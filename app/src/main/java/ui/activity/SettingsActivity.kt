@@ -154,6 +154,8 @@ class FragmentGameSettingsPage(val res: Int) : PreferenceFragment(), OnSharedPre
         addPreferencesFromResource(res)
         preferenceScreen.sharedPreferences.registerOnSharedPreferenceChangeListener(this)
 
+        if (res == R.xml.gs_game_mechanics) findPreference("gs_always_allow_npc_to_follow_over_water_surface").isEnabled = preferenceScreen.sharedPreferences.getBoolean("gs_build_navmesh", true)
+
         if (res == R.xml.gs_visuals) updatePreference(preferenceScreen.sharedPreferences, "gs_use_additional_animation_sources")
         if (res == R.xml.gs_camera) updatePreference(preferenceScreen.sharedPreferences, "gs_view_over_shoulder")
         if (res == R.xml.gs_engine) updatePreference(preferenceScreen.sharedPreferences, "gs_build_navmesh")
@@ -181,8 +183,8 @@ class FragmentGameSettingsPage(val res: Int) : PreferenceFragment(), OnSharedPre
         }
 
         if(key == "gs_build_navmesh") {
-            findPreference("gs_write_navmesh").isEnabled = sharedPreferences.getBoolean("gs_build_navmesh", false)
-            findPreference("gs_navmesh_threads").isEnabled = sharedPreferences.getBoolean("gs_build_navmesh", false)
+            findPreference("gs_write_navmesh").isEnabled = sharedPreferences.getBoolean("gs_build_navmesh", true)
+            findPreference("gs_navmesh_threads").isEnabled = sharedPreferences.getBoolean("gs_build_navmesh", true)
         }
     }
 }

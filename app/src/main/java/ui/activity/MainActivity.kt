@@ -353,7 +353,7 @@ class MainActivity : AppCompatActivity() {
         File(Constants.USER_FILE_STORAGE + "/icons").mkdirs()
         if (!File(Constants.USER_FILE_STORAGE + "/icons/paste custom icons here.txt").exists())
             File(Constants.USER_FILE_STORAGE + "/icons/paste custom icons here.txt").writeText(
-"attack.png \ninventory.png \njournal.png \njump.png \nkeyboard.png \n mouse.png \npause.png \npointer_arrow.png \nrun.png \nsave.png \nsneak.png \nthird_person.png \ntoggle_magic.png \ntoggle_weapon.png \ntoggle.png \nuse.png \nwait.png")
+"attack.png \ninventory.png \njournal.png \njump.png \nkeyboard.png \nmouse.png \npause.png \npointer_arrow.png \nrun.png \nsave.png \nsneak.png \nthird_person.png \ntoggle_magic.png \ntoggle_weapon.png \ntoggle.png \nuse.png \nwait.png")
 
         // set version stamp
         File(Constants.VERSION_STAMP).writeText(BuildConfig.VERSION_CODE.toString())
@@ -558,11 +558,16 @@ class MainActivity : AppCompatActivity() {
                         "allow actors to follow over water surface" to if(prefs.getBoolean("gs_always_allow_npc_to_follow_over_water_surface", true)) "true" else "false",
                         "strength influences hand to hand" to prefs.getString("gs_factor_strength_into_hand-to-hand_combat", "0").toString(),
 
+			// Visuals graphics
+                        "antialiasing" to prefs.getString("gs_antialiasing", "0").toString(),
+                        "framerate limit" to prefs.getString("gs_framerate_limit", "60").toString(),
+
 			// Visuals animations
                         "use magic item animations" to if(prefs.getBoolean("gs_use_magic_item_animation", false)) "true" else "false",
                         "use additional anim sources" to if(prefs.getBoolean("gs_use_additional_animation_sources", false)) "true" else "false",
                         "weapon sheathing" to if(prefs.getBoolean("gs_weapon_sheating", false)) "true" else "false",
                         "shield sheathing" to if(prefs.getBoolean("gs_shield_sheating", false)) "true" else "false",
+                        "graphic herbalism" to if(prefs.getBoolean("gs_enable_graphics_herbalism", true)) "true" else "false",
                         "smooth movement" to if(prefs.getBoolean("gs_smooth_movement", false)) "true" else "false",
                         "turn to movement direction" to if(prefs.getBoolean("gs_turn_to_movement_direction", false)) "true" else "false",
 
@@ -597,7 +602,6 @@ class MainActivity : AppCompatActivity() {
                         "color topic enable" to if(prefs.getBoolean("gs_change_dialogue_topic_color", false)) "true" else "false",
                         "stretch menu background" to if(prefs.getBoolean("gs_stretch_menu_background", false)) "true" else "false",
                         "allow zooming" to if(prefs.getBoolean("gs_can_zoom_on_maps", false)) "true" else "false",
-                        "graphic herbalism" to if(prefs.getBoolean("gs_enable_graphics_herbalism", true)) "true" else "false",
 
 			// Bug Fixes
                         "prevent merchant equipping" to if(prefs.getBoolean("gs_merchant_equipping_fix", false)) "true" else "false",
@@ -608,6 +612,7 @@ class MainActivity : AppCompatActivity() {
                         "max quicksaves" to prefs.getString("gs_maximum_quicksaves", "1").toString(),
 
 			// Engine Settings
+                        "enabled" to if(prefs.getBoolean("gs_groundcover", false)) "true" else "false",
                         "enable" to if(prefs.getBoolean("gs_build_navmesh", true)) "true" else "false",
                         "write to navmeshdb" to if(prefs.getBoolean("gs_write_navmesh", false)) "true" else "false",
                         "async nav mesh updater threads" to prefs.getString("gs_navmesh_threads", "1").toString(),

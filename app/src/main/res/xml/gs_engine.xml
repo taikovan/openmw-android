@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="Navigator">
+    <PreferenceCategory android:title="Engine">
+
+        <CheckBoxPreference
+            android:key="gs_groundcover"
+            android:title="Enable Separate Groundcover Handling"
+            android:defaultValue="false"
+            android:summary="Enable some special settings for groundcover mods (rendering distance, density). Also enable animation and disable colision for groundcover meshes (meshes loaded from /meshes/grass folder)"/>
 
         <CheckBoxPreference
             android:key="gs_build_navmesh"
@@ -15,6 +21,10 @@
             android:defaultValue="false"
             android:summary="Cache navigation mesh tiles to disk"/>
 
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Threading">
+
         <EditTextPreference
             android:key="gs_navmesh_threads"
             android:title="Background Navmesh Threads"
@@ -23,10 +33,6 @@
             android:hint="1"
             android:defaultValue="1"
             android:summary="Number of background threads to update nav mesh (value >= 1)."/>
-
-    </PreferenceCategory>
-
-    <PreferenceCategory android:title="Threading">
 
         <EditTextPreference
             android:key="gs_physics_threads"
