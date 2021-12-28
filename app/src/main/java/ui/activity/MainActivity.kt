@@ -592,6 +592,7 @@ class MainActivity : AppCompatActivity() {
                         "preview if stand still" to if(prefs.getBoolean("gs_preview_if_standing_still", false)) "true" else "false",
                         "deferred preview rotation" to if(prefs.getBoolean("gs_deferred_preview_rotation", true)) "true" else "false",
                         "head bobbing" to if(prefs.getBoolean("gs_head_bobbing", false)) "true" else "false",
+                        "hand inertia" to if(prefs.getBoolean("gs_hand_inertia", false)) "3.0" else "0.0",
 
 			// Interface
                         "show owned" to prefs!!.getString("gs_show_owned", "0").toString(),
