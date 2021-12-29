@@ -14,7 +14,8 @@
             android:dialogTitle="Maximum Quicksaves"
             android:inputType="numberDecimal"
             android:hint="1"
-            android:defaultValue="1"/>
+            android:defaultValue="1"
+            android:summary="Max amount of stored quicksaves"/>
 
     </PreferenceCategory>
 

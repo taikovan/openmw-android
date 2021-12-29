@@ -18,7 +18,8 @@
             android:dialogTitle="Framerate Limit"
             android:inputType="numberDecimal"
             android:hint="60"
-            android:defaultValue="60"/>
+            android:defaultValue="60"
+            android:summary="Maximum rendering framerate."/>
 
     </PreferenceCategory>
 

@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#1976D2</color>
     <color name="colorAccent">#FF4081</color>
 
-    <color name="modItemBackgroundColor">#EFEFEF</color>
+    <color name="modItemBackgroundColor">#FFFFFF</color>
     <color name="modItemSelectedColor">#999999</color>
     <color name="modItemTextColor">#000000</color>
 
