@@ -108,7 +108,8 @@ class GameActivity : SDLActivity() {
 
         Os.setenv("OSG_VERTEX_BUFFER_HINT", "VBO", true)
         Os.setenv("OPENMW_USER_FILE_STORAGE", Constants.USER_FILE_STORAGE + "/", true)
-
+        Os.setenv("OSG_NOTIFY_LEVEL", "FATAL") //hide osg errors for now, gl4es bug.
+        
         val envline: String = PreferenceManager.getDefaultSharedPreferences(this).getString("envLine", "").toString()
         if (envline.length > 0) {
             val envs: List<String> = envline.split(" ", "\n")
