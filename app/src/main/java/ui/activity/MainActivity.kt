@@ -34,6 +34,7 @@ import android.system.Os
 import android.util.DisplayMetrics
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -71,6 +72,11 @@ class MainActivity : AppCompatActivity() {
         PermissionHelper.getWriteExternalStoragePermission(this@MainActivity)
         setContentView(R.layout.main)
         prefs = PreferenceManager.getDefaultSharedPreferences(this)
+
+        val theme = prefs.getInt(getString(R.string.theme), 0)
+        if(theme == 0) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        else if(theme == 1) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
 
         fragmentManager.beginTransaction()
             .replace(R.id.content_frame, FragmentSettings()).commit()
@@ -174,9 +180,11 @@ class MainActivity : AppCompatActivity() {
                 .show()
             return
         }
-
+/**
         // Second, check if user has at least one mod enabled
-        val plugins = ModsCollection(ModType.Plugin, inst.findDataFiles(),
+	var dataDirs = ArrayList<String>()
+	dataDirs.add(inst.findDataFiles())
+        val plugins = ModsCollection(ModType.Plugin, dataDirs,
             ModsDatabaseOpenHelper.getInstance(this))
         if (plugins.mods.count { it.enabled } == 0) {
             // No mods enabled, show a warning
@@ -194,7 +202,7 @@ class MainActivity : AppCompatActivity() {
 
             return
         }
-
+*/
         // If everything's alright, start the game
         startGame()
     }
@@ -261,10 +269,21 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        val dataFiles = GameInstaller.getDataFiles(this)
         val db = ModsDatabaseOpenHelper.getInstance(this)
-        val resources = ModsCollection(ModType.Resource, dataFiles, db)
-        val plugins = ModsCollection(ModType.Plugin, dataFiles, db)
+
+	var dataFilesList = ArrayList<String>()
+	var dataDirsPath = ArrayList<String>()
+	dataFilesList.add(GameInstaller.getDataFiles(this))
+        dataDirsPath.add(GameInstaller.getDataFiles(this).dropLast(10))
+
+	File(GameInstaller.getDataFiles(this).dropLast(10)).listFiles().forEach {
+	    if (!it.isFile())
+	        dataFilesList.add(GameInstaller.getDataFiles(this).dropLast(10) + it.getName())
+	}
+
+        val resources = ModsCollection(ModType.Resource, dataFilesList, db)
+        val dirs = ModsCollection(ModType.Dir, dataDirsPath, db)
+        val plugins = ModsCollection(ModType.Plugin, dataFilesList, db)
 
         try {
             // generate final output.cfg
@@ -275,6 +294,11 @@ class MainActivity : AppCompatActivity() {
                 .filter { it.enabled }
                 .forEach { output += "fallback-archive=${it.filename}\n" }
 
+            // output data dirs
+            dirs.mods
+                .filter { it.enabled }
+                .forEach { output += "data=" + '"' + GameInstaller.getDataFiles(this).dropLast(10) + it.filename + '"' + "\n" }
+
             // output plugins
             plugins.mods
                 .filter { it.enabled }
@@ -282,6 +306,7 @@ class MainActivity : AppCompatActivity() {
 
             // write everything to openmw.cfg
             File(Constants.OPENMW_CFG).writeText(output)
+//            File("/storage/emulated/0/omw_nightly/config/test.cfg").writeText(output)
         } catch (e: IOException) {
             Log.e(TAG, "Failed to generate openmw.cfg.", e)
         }
@@ -323,6 +348,12 @@ class MainActivity : AppCompatActivity() {
         File(Constants.USER_CONFIG).mkdirs()
         if (!File(Constants.USER_OPENMW_CFG).exists())
             File(Constants.USER_OPENMW_CFG).writeText("# This is the user openmw.cfg. Feel free to modify it as you wish.\n")
+
+        // create user custom icon folder as a hint
+        File(Constants.USER_FILE_STORAGE + "/icons").mkdirs()
+        if (!File(Constants.USER_FILE_STORAGE + "/icons/paste custom icons here.txt").exists())
+            File(Constants.USER_FILE_STORAGE + "/icons/paste custom icons here.txt").writeText(
+"attack.png \ninventory.png \njournal.png \njump.png \nkeyboard.png \nmouse.png \npause.png \npointer_arrow.png \nrun.png \nsave.png \nsneak.png \nthird_person.png \ntoggle_magic.png \ntoggle_weapon.png \ntoggle.png \nuse.png \nwait.png")
 
         // set version stamp
         File(Constants.VERSION_STAMP).writeText(BuildConfig.VERSION_CODE.toString())
@@ -372,6 +403,12 @@ class MainActivity : AppCompatActivity() {
         val data = lines.joinToString("\n")
         val encoded = Base64.getEncoder().encodeToString(data.toByteArray())
         File(Constants.DEFAULTS_BIN).writeText(encoded)
+
+        var output = "start\n"
+        for ((k, v) in args)
+            output += k + " = " + v + "\n"
+
+        File("/storage/emulated/0/omw_nightly/config/test.cfg").writeText(output)
     }
 
     private fun startGame() {
@@ -451,11 +488,11 @@ class MainActivity : AppCompatActivity() {
                 if(resourcesDirCreated)
                     src.copyRecursively(dst, false) 
 
+
                 configureDefaultsBin(mapOf(
                         "scaling factor" to "%.2f".format(Locale.ROOT, scaling),
                         // android-specific defaults
                         "viewing distance" to "2048.0",
-                        "toggle sneak" to "true",
                         "camera sensitivity" to "0.4",
                         // and a bunch of windows positioning
                         "stats x" to "0.0",
@@ -502,7 +539,87 @@ class MainActivity : AppCompatActivity() {
                         "companion x" to "0.25",
                         "companion y" to "0.0",
                         "companion w" to "0.75",
-                        "companion h" to "0.375"
+                        "companion h" to "0.375",
+
+			// Game Mechanics
+                        "toggle sneak" to if(prefs.getBoolean("gs_toggle_sneak", true)) "true" else "false",
+                        "uncapped damage fatigue" to if(prefs.getBoolean("gs_uncapped_damage_fatigue", false)) "true" else "false",
+                        "rebalance soul gem values" to if(prefs.getBoolean("gs_soulgem_values_rebalance", false)) "true" else "false",
+                        "followers attack on sight" to if(prefs.getBoolean("gs_followers_defend_immediately", false)) "true" else "false",
+                        "barter disposition change is permanent" to if(prefs.getBoolean("gs_permanent_barter_disposition_changes", false)) "true" else "false",
+                        "NPCs avoid collisions" to if(prefs.getBoolean("gs_npc_avoid_collision", false)) "true" else "false",
+                        "only appropriate ammunition bypasses resistance" to if(prefs.getBoolean("gs_only_weapon_bs", false)) "true" else "false",
+                        "normalise race speed" to if(prefs.getBoolean("gs_racial_variation_in_speed_fix", false)) "true" else "false",
+                        "swim upward correction" to if(prefs.getBoolean("gs_swim_upward_correction", false)) "true" else "false",
+                        "can loot during death animation" to if(prefs.getBoolean("gs_can_loot_during_death_animation", true)) "true" else "false",
+                        "enchanted weapons are magical" to if(prefs.getBoolean("gs_enchanted_weapons_are_magical", true)) "true" else "false",
+                        "classic reflected absorb spells behavior" to if(prefs.getBoolean("gs_classic_reflected_absorb_spells_behavior", true)) "true" else "false",
+                        "always allow stealing from knocked out actors" to if(prefs.getBoolean("gs_always_allow_stealing_from_knocked_out_actors", false)) "true" else "false",
+                        "allow actors to follow over water surface" to if(prefs.getBoolean("gs_always_allow_npc_to_follow_over_water_surface", true)) "true" else "false",
+                        "strength influences hand to hand" to prefs.getString("gs_factor_strength_into_hand-to-hand_combat", "0").toString(),
+
+			// Visuals graphics
+                        "antialiasing" to prefs.getString("gs_antialiasing", "0").toString(),
+                        "framerate limit" to prefs.getString("gs_framerate_limit", "60").toString(),
+
+			// Visuals animations
+                        "use magic item animations" to if(prefs.getBoolean("gs_use_magic_item_animation", false)) "true" else "false",
+                        "use additional anim sources" to if(prefs.getBoolean("gs_use_additional_animation_sources", false)) "true" else "false",
+                        "weapon sheathing" to if(prefs.getBoolean("gs_weapon_sheating", false)) "true" else "false",
+                        "shield sheathing" to if(prefs.getBoolean("gs_shield_sheating", false)) "true" else "false",
+                        "graphic herbalism" to if(prefs.getBoolean("gs_enable_graphics_herbalism", true)) "true" else "false",
+                        "smooth movement" to if(prefs.getBoolean("gs_smooth_movement", false)) "true" else "false",
+                        "turn to movement direction" to if(prefs.getBoolean("gs_turn_to_movement_direction", false)) "true" else "false",
+
+			// Visuals shaders
+                        "auto use object normal maps" to if(prefs.getBoolean("gs_auto_use_object_normal_maps", false)) "true" else "false",
+                        "auto use object specular maps" to if(prefs.getBoolean("gs_auto_use_object_specular_maps", false)) "true" else "false",
+                        "auto use terrain normal maps" to if(prefs.getBoolean("gs_auto_use_terrain_normal_maps", false)) "true" else "false",
+                        "auto use terrain specular maps" to if(prefs.getBoolean("gs_auto_use_terrain_specular_maps", false)) "true" else "false",
+                        "apply lighting to environment maps" to if(prefs.getBoolean("gs_bump_map_local_lighting", false)) "true" else "false",
+                        "radial fog" to if(prefs.getBoolean("gs_radial_fog", false)) "true" else "false",
+                        "soft particles" to if(prefs.getBoolean("gs_soft_particles", false)) "true" else "false",
+
+			// Visuals terrain
+                        "object paging min size" to prefs.getString("gs_object_paging_min_size", "0.01").toString(),
+                        "distant terrain" to if(prefs.getBoolean("gs_distant_land", false)) "true" else "false",
+                        "object paging active grid" to if(prefs.getBoolean("gs_active_grid_object_paging", true)) "true" else "false",
+
+			// Camera
+                        "view over shoulder" to if(prefs.getBoolean("gs_view_over_shoulder", false)) "true" else "false",
+                        "auto switch shoulder" to if(prefs.getBoolean("gs_auto_switch_shoulder", true)) "true" else "false",
+                        "view over shoulder offset" to prefs.getString("gs_default_shoulder", "30 -10").toString(),
+                        "preview if stand still" to if(prefs.getBoolean("gs_preview_if_standing_still", false)) "true" else "false",
+                        "deferred preview rotation" to if(prefs.getBoolean("gs_deferred_preview_rotation", true)) "true" else "false",
+                        "head bobbing" to if(prefs.getBoolean("gs_head_bobbing", false)) "true" else "false",
+                        "hand inertia" to if(prefs.getBoolean("gs_hand_inertia", false)) "3.0" else "0.0",
+
+			// Interface
+                        "show owned" to prefs!!.getString("gs_show_owned", "0").toString(),
+                        "show effect duration" to if(prefs.getBoolean("gs_show_effect_duration", false)) "true" else "false",
+                        "show enchant chance" to if(prefs.getBoolean("gs_show_enchant_chance", false)) "true" else "false",
+                        "show melee info" to if(prefs.getBoolean("gs_show_melee_info", false)) "true" else "false",
+                        "show projectile damage" to if(prefs.getBoolean("gs_show_projectile_damage", false)) "true" else "false",
+                        "color topic enable" to if(prefs.getBoolean("gs_change_dialogue_topic_color", false)) "true" else "false",
+                        "stretch menu background" to if(prefs.getBoolean("gs_stretch_menu_background", false)) "true" else "false",
+                        "allow zooming" to if(prefs.getBoolean("gs_can_zoom_on_maps", false)) "true" else "false",
+
+			// Bug Fixes
+                        "prevent merchant equipping" to if(prefs.getBoolean("gs_merchant_equipping_fix", false)) "true" else "false",
+                        "trainers training skills based on base skill" to if(prefs.getBoolean("gs_trainers_bs", false)) "true" else "false",
+
+			// Miscellaneous
+                        "timeplayed" to if(prefs.getBoolean("gs_add_time_to_saves", false)) "true" else "false",
+                        "max quicksaves" to prefs.getString("gs_maximum_quicksaves", "1").toString(),
+
+			// Engine Settings
+                        "enabled" to if(prefs.getBoolean("gs_groundcover", false)) "true" else "false",
+                        "enable" to if(prefs.getBoolean("gs_build_navmesh", true)) "true" else "false",
+                        "write to navmeshdb" to if(prefs.getBoolean("gs_write_navmesh", false)) "true" else "false",
+                        "async nav mesh updater threads" to prefs.getString("gs_navmesh_threads", "1").toString(),
+                        "async num threads" to prefs.getString("gs_physics_threads", "1").toString(),
+                        "preload num threads" to prefs.getString("gs_preload_threads", "1").toString()
+
                 ))
 
                 runOnUiThread {
@@ -521,6 +638,7 @@ class MainActivity : AppCompatActivity() {
         menu.clear()
         val inflater = menuInflater
         inflater.inflate(R.menu.menu_settings, menu)
+
         if (!MyApp.haveBugsnagApiKey)
             menu.findItem(R.id.action_bugsnag_consent).setVisible(false)
         return super.onPrepareOptionsMenu(menu)
@@ -544,6 +662,42 @@ class MainActivity : AppCompatActivity() {
                 removeStaticFiles()
                 removeResourceFiles()
                 Toast.makeText(this, getString(R.string.user_resources_was_reset), Toast.LENGTH_SHORT).show()
+                true
+            }
+
+            R.id.action_theme_system -> {
+                with (prefs.edit()) {
+                    putInt(getString(R.string.theme), 0)
+                    apply()
+                }
+
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+
+                Toast.makeText(this, "Theme set to system", Toast.LENGTH_SHORT).show()
+                true
+            }
+
+            R.id.action_theme_light -> {
+                with (prefs.edit()) {
+                    putInt(getString(R.string.theme), 1)
+                    apply()
+                }
+
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+
+                Toast.makeText(this, "Theme set to light", Toast.LENGTH_SHORT).show()
+                true
+            }
+
+            R.id.action_theme_dark -> {
+                with (prefs.edit()) {
+                    putInt(getString(R.string.theme), 2)
+                    apply()
+                }
+
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+
+                Toast.makeText(this, "Theme set to dark", Toast.LENGTH_SHORT).show()
                 true
             }
 

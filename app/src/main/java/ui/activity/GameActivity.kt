@@ -101,18 +101,15 @@ class GameActivity : SDLActivity() {
 
         val shaderDirOption = prefs!!.getString("pref_shadersDir_v2", "")
         if (shaderDirOption == "modified") Os.setenv("OPENMW_SHADERS", "modified", true)
-        if (shaderDirOption == "pbr") Os.setenv("OPENMW_SHADERS", "pbr", true)
 
         if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("pref_nohighp", false) && shaderDirOption == "modified") {
             Os.setenv("LIBGL_NOHIGHP", "1", true)
         }
 
-        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("pref_OSGVBO", false)) {
-            Os.setenv("OSG_VERTEX_BUFFER_HINT", "VBO", true)
-        }
-
+        Os.setenv("OSG_VERTEX_BUFFER_HINT", "VBO", true)
         Os.setenv("OPENMW_USER_FILE_STORAGE", Constants.USER_FILE_STORAGE + "/", true)
-
+        Os.setenv("OSG_NOTIFY_LEVEL", "FATAL", true) //hide osg errors for now, gl4es bug.
+        
         val envline: String = PreferenceManager.getDefaultSharedPreferences(this).getString("envLine", "").toString()
         if (envline.length > 0) {
             val envs: List<String> = envline.split(" ", "\n")
