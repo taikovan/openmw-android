@@ -53,7 +53,7 @@ set(LUAJIT_VERSION 2.1.0-beta3)
 set(LUAJIT_HASH SHA256=1ad2e34b111c802f9d0cdf019e986909123237a28c746b21295b63c9e785d9c3)
 
 # https://github.com/OpenMW/openmw/commits/master
-set(OPENMW_VERSION 7922e804faa8b9a94f94f657de82b57b5db7e69b)
+set(OPENMW_VERSION dc42a1a4be7c7abce3a066a0d6649740427a3a00)
 set(OPENMW_HASH SHA256=44d044ad0a5546216fe611fe92c37065bb07e2efeeeaac4f049dae03df313186)
 
 # End of configurable options
