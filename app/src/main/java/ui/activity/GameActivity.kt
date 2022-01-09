@@ -40,6 +40,10 @@ import ui.controls.Osc
 
 import utils.Utils.hideAndroidControls
 
+import android.os.AsyncTask
+import android.widget.ImageView
+import android.widget.TextView
+
 /**
  * Enum for different mouse modes as specified in settings
  */
@@ -131,11 +135,71 @@ class GameActivity : SDLActivity() {
         return "libopenmw.so"
     }
 
+
+    private fun showProgressBar() {
+
+/*
+        val v = ImageView(layout.context)
+        v.setImageResource(R.drawable.sneak)
+
+//        val text = TextView(this)
+        text.setText("bla bla bla")
+        layout.addView(v)
+        layout.addView(text)
+
+
+var counter = 0
+
+        val thread = Thread(Runnable {
+        
+            while(counter < 200/*Os.getenv("NAVMESHTOOL_MESSAGE") != "Done"*/) {
+                text.setText(counter.toString()/*Os.getenv("NAVMESHTOOL_MESSAGE")*/)
+                Thread.sleep(200)
+
+            }
+        })
+
+        thread.start()*/
+
+  //      val updater = ProgressBarUpdater()
+   //     ProgressBarUpdater().execute()
+    }
+
+    class ProgressBarUpdater() : AsyncTask<Void, String, String>() {
+        override fun doInBackground(vararg params: Void?): String {
+
+    /*        while(Os.getenv("NAVMESHTOOL_MESSAGE") != "Done") {
+                publishProgress(Os.getenv("NAVMESHTOOL_MESSAGE"))
+                Thread.sleep(50)
+            }*/
+
+            return "DONE"
+        }
+/*
+        override fun onPreExecute() {
+            super.onPreExecute()
+        }
+
+        override fun onPostExecute() {
+            super.onPostExecute()
+        }
+
+        override fun onProgressUpdate(vararg progress: String?) {
+            super.onProgressUpdate()
+
+         //   text.setText(progress[0])
+        }
+*/
+    }
+
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         KeepScreenOn()
         getPathToJni(filesDir.parent, Constants.USER_FILE_STORAGE)
-        showControls()
+        if(Os.getenv("OPENMW_GENERATE_NAVMESH_CACHE") == "1")
+            ProgressBarUpdater().execute()
+        else
+            showControls()
     }
 
     private fun showControls() {
