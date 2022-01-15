@@ -88,10 +88,8 @@ abstract class OskButton(
         v.visibility = View.GONE
 
         // TODO: this doesn't take soft keys into account
-        val dm = DisplayMetrics()
-        windowManager.defaultDisplay.getRealMetrics(dm)
-        val realScreenWidth = dm.widthPixels
-        val realScreenHeight = dm.heightPixels
+        val realScreenWidth = v.context.resources.displayMetrics.widthPixels
+        val realScreenHeight = v.context.resources.displayMetrics.heightPixels
         val realX = positionX * realScreenWidth / VIRTUAL_SCREEN_WIDTH
         val realY = positionY * realScreenHeight / VIRTUAL_SCREEN_HEIGHT
 
