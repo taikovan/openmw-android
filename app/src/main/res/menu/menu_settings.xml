@@ -46,6 +46,11 @@
             </item>
 
 
+        <item
+            android:id="@+id/action_generate_navmesh"
+            android:title="@string/action_generate_navmesh"
+            app:showAsAction="never"
+            />
 
         <item
             android:id="@+id/action_about"
