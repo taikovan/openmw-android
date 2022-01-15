@@ -20,6 +20,7 @@
 package ui.controls
 
 import android.view.KeyEvent
+import android.view.KeyCharacterMap
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
@@ -136,14 +137,28 @@ class OskSimpleButton(val key: Char, val shiftKey: Char, positionX: Int, positio
     private val shiftKeyStr = shiftKey.toString()
     private var curKeyStr = keyStr
 
+/*
     override fun released() {
         SDLActivity.nativeCommitText(curKeyStr, 0)
     }
-
+*/
     fun shift(on: Boolean) {
         curKeyStr = if (on) shiftKeyStr else keyStr
         view?.text = curKeyStr
     }
+
+    val mKeyCharacterMap = KeyCharacterMap.load(KeyCharacterMap.VIRTUAL_KEYBOARD)
+    val keyEvent = mKeyCharacterMap.getEvents(key.toString().toCharArray())
+
+
+    override fun pressed() {
+        SDLActivity.onNativeKeyDown(keyEvent[0].getKeyCode())
+    }
+
+    override fun released() {
+        SDLActivity.onNativeKeyUp(keyEvent[0].getKeyCode())
+    }
+
 }
 
 class OskRawButton(text: String, private val keyCode: Int, positionX: Int, positionY: Int, sizeW: Int, sizeH: Int):
