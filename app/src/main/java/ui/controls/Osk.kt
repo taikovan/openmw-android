@@ -25,7 +25,9 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
 import android.widget.RelativeLayout
+import android.util.DisplayMetrics
 import org.libsdl.app.SDLActivity
+
 
 class OskTouchListener(val btn: OskButton): View.OnTouchListener {
 
@@ -86,8 +88,10 @@ abstract class OskButton(
         v.visibility = View.GONE
 
         // TODO: this doesn't take soft keys into account
-        val realScreenWidth = v.context.resources.displayMetrics.widthPixels
-        val realScreenHeight = v.context.resources.displayMetrics.heightPixels
+        val dm = DisplayMetrics()
+        windowManager.defaultDisplay.getRealMetrics(dm)
+        val realScreenWidth = dm.widthPixels
+        val realScreenHeight = dm.heightPixels
         val realX = positionX * realScreenWidth / VIRTUAL_SCREEN_WIDTH
         val realY = positionY * realScreenHeight / VIRTUAL_SCREEN_HEIGHT
 
@@ -137,28 +141,22 @@ class OskSimpleButton(val key: Char, val shiftKey: Char, positionX: Int, positio
     private val shiftKeyStr = shiftKey.toString()
     private var curKeyStr = keyStr
 
-/*
-    override fun released() {
-        SDLActivity.nativeCommitText(curKeyStr, 0)
-    }
-*/
-    fun shift(on: Boolean) {
-        curKeyStr = if (on) shiftKeyStr else keyStr
-        view?.text = curKeyStr
-    }
-
     val mKeyCharacterMap = KeyCharacterMap.load(KeyCharacterMap.VIRTUAL_KEYBOARD)
     val keyEvent = mKeyCharacterMap.getEvents(key.toString().toCharArray())
-
 
     override fun pressed() {
         SDLActivity.onNativeKeyDown(keyEvent[0].getKeyCode())
     }
 
     override fun released() {
+        SDLActivity.nativeCommitText(curKeyStr, 0)
         SDLActivity.onNativeKeyUp(keyEvent[0].getKeyCode())
     }
 
+    fun shift(on: Boolean) {
+        curKeyStr = if (on) shiftKeyStr else keyStr
+        view?.text = curKeyStr
+    }
 }
 
 class OskRawButton(text: String, private val keyCode: Int, positionX: Int, positionY: Int, sizeW: Int, sizeH: Int):
