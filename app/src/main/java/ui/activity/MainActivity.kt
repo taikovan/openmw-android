@@ -391,7 +391,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun configureDefaultsBin(args: Map<String, String>) {
-        val defaults = File(Constants.DEFAULTS_BIN).readText()
+        /*val defaults = File(Constants.DEFAULTS_BIN).readText()
         val decoded = String(Base64.getDecoder().decode(defaults))
         val lines = decoded.lines().map {
             for ((k, v) in args) {
@@ -408,7 +408,7 @@ class MainActivity : AppCompatActivity() {
         for ((k, v) in args)
             output += k + " = " + v + "\n"
 
-        File("/storage/emulated/0/omw_nightly/config/test.cfg").writeText(output)
+        File("/storage/emulated/0/omw_nightly/config/test.cfg").writeText(output)*/
     }
 
     private fun startGame() {
