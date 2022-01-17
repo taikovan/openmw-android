@@ -40,6 +40,13 @@ import ui.controls.Osc
 
 import utils.Utils.hideAndroidControls
 
+import android.util.DisplayMetrics
+import android.os.AsyncTask
+import android.widget.ImageView
+import android.widget.TextView
+import android.graphics.Typeface
+import android.graphics.Rect
+
 /**
  * Enum for different mouse modes as specified in settings
  */
@@ -131,11 +138,91 @@ class GameActivity : SDLActivity() {
         return "libopenmw.so"
     }
 
+
+    private fun showProgressBar() {
+        val dm = DisplayMetrics()
+        windowManager.defaultDisplay.getRealMetrics(dm)
+
+        val progressBarBackground = ImageView(layout.context)
+        progressBarBackground.setImageResource(R.drawable.progressbarbackground)
+        progressBarBackground.setScaleType(ImageView.ScaleType.FIT_XY)
+        progressBarBackground.setX(((dm.widthPixels / 2) - 405).toFloat())
+        progressBarBackground.setY(((dm.heightPixels / 2) - 105).toFloat())
+        layout.addView(progressBarBackground)
+        progressBarBackground.getLayoutParams().width = 810
+        progressBarBackground.getLayoutParams().height = 60
+
+
+        val progressBar = ImageView(layout.context)
+        progressBar.setImageResource(R.drawable.progressbar)
+        progressBar.setScaleType(ImageView.ScaleType.FIT_XY)
+        progressBar.setX(((dm.widthPixels / 2) - 400).toFloat())
+        progressBar.setY(((dm.heightPixels / 2) - 100).toFloat())
+        layout.addView(progressBar)
+        progressBar.getLayoutParams().width = 0
+        progressBar.getLayoutParams().height = 50
+
+        val message = "GENERATING NAVMESH CACHE"
+        val text = TextView(this)
+        text.setText(message)
+        val bounds = Rect()
+        text.getPaint().getTextBounds(message!!.toString(), 0, message!!.length, bounds)
+        text.setX(((dm.widthPixels / 2) - (bounds.width() / 2)) .toFloat())
+        text.setY(((dm.heightPixels / 2) - 200).toFloat())
+        text.setTypeface(null, Typeface.BOLD)
+        layout.addView(text)
+
+        val percentageText = TextView(this)
+        percentageText.setX((dm.widthPixels / 2).toFloat())
+        percentageText.setY(((dm.heightPixels / 2) + 50).toFloat())
+        layout.addView(percentageText)
+
+        Os.setenv("NAVMESHTOOL_MESSAGE", "0.0", true)
+        ProgressBarUpdater(percentageText, progressBar, dm.widthPixels, dm.heightPixels).execute()
+    }
+
+    class ProgressBarUpdater(val percentageText: TextView, val progressBar: ImageView, val screenWidth: Int, val screenHeight: Int) : AsyncTask<Void, String, String>() {
+        override fun doInBackground(vararg params: Void?): String {
+
+            while(Os.getenv("NAVMESHTOOL_MESSAGE") != "Done") {
+                publishProgress(Os.getenv("NAVMESHTOOL_MESSAGE"))
+                Thread.sleep(50)
+            }
+
+            return "DONE"
+        }
+/*
+        override fun onPreExecute() {
+            super.onPreExecute()
+        }
+
+        override fun onPostExecute() {
+            super.onPostExecute()
+        }
+*/
+        override fun onProgressUpdate(vararg progress: String?) {
+            super.onProgressUpdate()
+
+            progressBar.requestLayout()
+            progressBar.getLayoutParams().width = (8.0 * progress[0]!!.toFloat()).toInt()
+
+            val bounds = Rect()
+            percentageText.getPaint().getTextBounds(progress[0]!!.toString(), 0, progress[0]!!.length, bounds)
+
+            percentageText.setX(((screenWidth / 2) - (bounds.width() / 2)).toFloat())
+            percentageText.setText(progress[0])
+        }
+
+    }
+
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         KeepScreenOn()
         getPathToJni(filesDir.parent, Constants.USER_FILE_STORAGE)
-        showControls()
+        if(Os.getenv("OPENMW_GENERATE_NAVMESH_CACHE") == "1")
+            showProgressBar()
+        else
+            showControls()
     }
 
     private fun showControls() {

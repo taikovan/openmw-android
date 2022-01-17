@@ -701,6 +701,12 @@ class MainActivity : AppCompatActivity() {
                 true
             }
 
+            R.id.action_generate_navmesh -> {
+                Os.setenv("OPENMW_GENERATE_NAVMESH_CACHE", "1", true)
+                checkStartGame()
+                true
+            }
+
             R.id.action_about -> {
                 val text = assets.open("libopenmw/3rdparty-licenses.txt")
                     .bufferedReader()
